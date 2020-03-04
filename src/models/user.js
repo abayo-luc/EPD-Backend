@@ -1,4 +1,5 @@
 'use strict';
+import encrypt from '../utils/encrypt';
 module.exports = (sequelize, DataTypes) => {
 	const User = sequelize.define(
 		'User',
@@ -12,7 +13,8 @@ module.exports = (sequelize, DataTypes) => {
 			name: DataTypes.STRING,
 			username: {
 				type: DataTypes.STRING,
-				allowNull: false
+				allowNull: false,
+				unique: true
 			},
 			email: DataTypes.STRING,
 			poneNumber: DataTypes.STRING,
@@ -25,8 +27,11 @@ module.exports = (sequelize, DataTypes) => {
 				defaultValue: 'agent'
 			}
 		},
-		{}
+		{
+			tableName: 'Users'
+		}
 	);
+	User.beforeCreate((user, _options) => encrypt(user));
 	User.associate = function(models) {
 		// associations can be defined here
 	};

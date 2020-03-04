@@ -1,0 +1,13 @@
+@BASE_URL = {{$dotenv BASE_URL}}
+
+### /users
+
+GET {{BASE_URL}}/users
+Content-Type: application/json
+
+###
+
+POST {{BASE_URL}}/users
+Content-Type: application/json
+
+{"username":"luc9","password":"password"}
