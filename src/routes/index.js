@@ -1,9 +1,7 @@
-import {
-    Router
-} from 'express'
-import MainController from '../controllers/main'
-const routers = Router()
+import { Router } from 'express';
+import userRouters from './user.router';
+const routers = Router();
 
-routers.get('/', MainController.home)
+routers.use(userRouters);
 
-export default routers
+export default routers;
