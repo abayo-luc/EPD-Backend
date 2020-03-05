@@ -4,10 +4,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 const { BCRYPT_SALT_FACTOR } = process.env;
 
-export default user =>
+export default password =>
 	bcrypt
-		.hash(user.password, parseInt(BCRYPT_SALT_FACTOR, 10))
-		.then(hash => user.setDataValue('password', hash))
+		.hash(password, parseInt(BCRYPT_SALT_FACTOR, 10))
+		.then(hash => hash)
 		.catch(err => {
 			throw Error(err.message || 'Password encryption failed');
 		});
