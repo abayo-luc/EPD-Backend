@@ -19,7 +19,7 @@ module.exports = {
 			email: {
 				type: Sequelize.STRING
 			},
-			poneNumber: {
+			phoneNumber: {
 				type: Sequelize.STRING
 			},
 			password: {
@@ -29,6 +29,10 @@ module.exports = {
 			role: {
 				type: Sequelize.ENUM('superAdmin', 'admin', 'supervisor', 'agent'),
 				defaultValue: 'agent'
+			},
+			blocked: {
+				type: Sequelize.BOOLEAN,
+				defaultValue: false
 			},
 			createdAt: {
 				allowNull: false,

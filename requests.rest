@@ -1,13 +1,18 @@
 @BASE_URL = {{$dotenv BASE_URL}}
 
 ### /users
-
 GET {{BASE_URL}}/users
 Content-Type: application/json
-
 ###
-
 POST {{BASE_URL}}/users
 Content-Type: application/json
 
-{"username":"luc9","password":"password"}
+{"username":"Jeana","password":"password", "email":"jean@gmail.com"}
+###
+GET {{BASE_URL}}/users/76765b9c-a2c2-4885-8c17-b84d18e724e8
+Content-Type: application/json
+###
+PUT {{BASE_URL}}/users/76765b9c-a2c2-4885-8c17-b84d18e724e8
+Content-Type: application/json
+
+{"phoneNumber":"0789277275", "name":"Luc Abayo"}
