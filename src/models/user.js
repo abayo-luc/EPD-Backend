@@ -14,17 +14,54 @@ module.exports = (sequelize, DataTypes) => {
 			username: {
 				type: DataTypes.STRING,
 				allowNull: false,
-				unique: true
+				unique: true,
+				validate: {
+					invalid: function(username) {
+						const usernameRegex = /^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/;
+						if (username.length < 4) {
+							throw new Error('Username too short');
+						}
+						if (username.length > 20) {
+							throw new Error('Username too long');
+						}
+						if (!usernameRegex.test(username)) {
+							throw new Error('Invalid username');
+						}
+					}
+				}
 			},
-			email: DataTypes.STRING,
-			poneNumber: DataTypes.STRING,
+			email: {
+				type: DataTypes.STRING,
+				validate: {
+					invalid: function(email) {
+						const emailRegex = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+						if (email && !emailRegex.test(email)) {
+							throw new Error('Invalid email');
+						}
+					}
+				}
+			},
+			phoneNumber: DataTypes.STRING,
 			password: {
 				type: DataTypes.STRING,
-				allowNull: false
+				allowNull: false,
+				validate: {
+					invalid: function(password) {
+						if (password.length < 6) {
+							throw new Error('Password too short');
+						} else if (password.length > 20) {
+							throw new Error('Password too long');
+						}
+					}
+				}
 			},
 			role: {
 				type: DataTypes.ENUM('superAdmin', 'admin', 'supervisor', 'agent'),
 				defaultValue: 'agent'
+			},
+			blocked: {
+				type: DataTypes.BOOLEAN,
+				defaultValue: false
 			}
 		},
 		{
@@ -32,6 +69,11 @@ module.exports = (sequelize, DataTypes) => {
 		}
 	);
 	User.beforeCreate((user, _options) => encrypt(user));
+	User.beforeSave((user, _options) => {
+		if (user.username) {
+			user.username = user.username.toLowerCase();
+		}
+	});
 	User.associate = function(models) {
 		// associations can be defined here
 	};
