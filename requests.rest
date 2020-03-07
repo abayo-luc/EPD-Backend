@@ -9,10 +9,17 @@ Content-Type: application/json
 
 {"username":"Jeana","password":"password", "email":"jean@gmail.com"}
 ###
-GET {{BASE_URL}}/users/76765b9c-a2c2-4885-8c17-b84d18e724e8
+GET {{BASE_URL}}/users/dfe899b3-7232-4508-a18d-695eb40e5e59
 Content-Type: application/json
 ###
-PUT {{BASE_URL}}/users/76765b9c-a2c2-4885-8c17-b84d18e724e8
+PUT {{BASE_URL}}/users/dfe899b3-7232-4508-a18d-695eb40e5e59
 Content-Type: application/json
 
 {"phoneNumber":"0789277275", "name":"Luc Abayo"}
+
+###
+
+PUT {{BASE_URL}}/users/dfe899b3-7232-4508-a18d-695eb40e5e59/passwords
+Content-Type: application/json
+
+{"password":"passwordkjhkaf"}

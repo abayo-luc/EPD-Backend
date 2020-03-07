@@ -68,7 +68,9 @@ module.exports = (sequelize, DataTypes) => {
 			tableName: 'Users'
 		}
 	);
-	User.beforeCreate((user, _options) => encrypt(user));
+	User.beforeSave(async (user, _options) => {
+		user.password = await encrypt(user.password);
+	});
 	User.beforeSave((user, _options) => {
 		if (user.username) {
 			user.username = user.username.toLowerCase();

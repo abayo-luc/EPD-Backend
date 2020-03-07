@@ -51,7 +51,7 @@ class UserController extends MainController {
 		try {
 			const fields = [];
 			const { id } = req.params;
-			const user = await User.findOne({ where: { id } });
+			const user = await User.findByPk(id);
 			if (!user) {
 				return MainController.handleFind(res);
 			}
@@ -59,9 +59,31 @@ class UserController extends MainController {
 				if (req.body[item]) user[item] = req.body[item];
 				if (req.body[item]) fields.push(item);
 			});
-			console.log(req.body.phoneNumber);
 			const data = await user.save({ fields });
-			return res.status(200).json({ data });
+			data.password = undefined;
+			return res.status(200).json({
+				data
+			});
+		} catch (error) {
+			return MainController.handleError(res, error);
+		}
+	}
+
+	static async updatePassword(req, res) {
+		try {
+			const { id } = req.params;
+			const { password } = req.body;
+			const user = await User.findByPk(id);
+			if (!user) {
+				return MainController.handleFind(res);
+			}
+			user.password = password;
+			await user.save({ fields: ['password'] });
+			return res.status(200).json({
+				data: {
+					message: 'Password update successfully'
+				}
+			});
 		} catch (error) {
 			return MainController.handleError(res, error);
 		}
