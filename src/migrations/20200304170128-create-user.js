@@ -20,7 +20,9 @@ module.exports = {
 				type: Sequelize.STRING
 			},
 			phoneNumber: {
-				type: Sequelize.STRING
+				type: Sequelize.STRING,
+				allowNull: false,
+				unique: true
 			},
 			password: {
 				type: Sequelize.STRING,
@@ -31,6 +33,10 @@ module.exports = {
 				defaultValue: 'agent'
 			},
 			blocked: {
+				type: Sequelize.BOOLEAN,
+				defaultValue: false
+			},
+			confirmed: {
 				type: Sequelize.BOOLEAN,
 				defaultValue: false
 			},
