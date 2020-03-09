@@ -1,14 +1,20 @@
 import MainController from '../main';
 import db from '../../models';
 import { signUpValidator, userUpdateValidator } from '../../utils/validator';
-const { User } = db;
+const { User, Company } = db;
 class UserController extends MainController {
 	static async index(_req, res) {
 		try {
 			const data = await User.findAll({
 				attributes: {
 					exclude: ['password']
-				}
+				},
+				include: [
+					{
+						model: Company,
+						as: 'company'
+					}
+				]
 			});
 			return res.status(200).json({ data });
 		} catch (error) {
@@ -18,16 +24,14 @@ class UserController extends MainController {
 
 	static async create(req, res) {
 		try {
-			const { username, password, phoneNumber } = req.body;
-			await signUpValidator.validateAsync({
-				username,
-				password,
-				phoneNumber
-			});
+			const { username, password, phoneNumber, role, companyId } = req.body;
+			await signUpValidator.validateAsync(req.body);
 			const data = await User.create({
 				username,
 				password,
-				phoneNumber
+				phoneNumber,
+				role,
+				companyId
 			});
 			data.password = undefined;
 			return res.status(201).json({
@@ -41,11 +45,25 @@ class UserController extends MainController {
 	static async find(req, res) {
 		try {
 			const { id } = req.params;
-			const data = await User.findByPk(id, {
-				attributes: {
-					exclude: ['password']
-				}
-			});
+			let data;
+			if (req.user?.role === 'supervisor') {
+				data = await User.findOne({
+					attributes: {
+						exclude: ['password']
+					},
+					where: {
+						id,
+						companyId: req.user.companyId
+					}
+				});
+			} else {
+				data = await User.findByPk(id, {
+					attributes: {
+						exclude: ['password']
+					}
+				});
+			}
+
 			return MainController.handleFind(res, data);
 		} catch (error) {
 			return MainController.handleError(res, error);
