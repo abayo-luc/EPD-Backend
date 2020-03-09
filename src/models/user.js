@@ -41,7 +41,19 @@ module.exports = (sequelize, DataTypes) => {
 					}
 				}
 			},
-			phoneNumber: DataTypes.STRING,
+			phoneNumber: {
+				type: DataTypes.STRING,
+				allowNull: false,
+				unique: true,
+				validate: {
+					invalid: function(phoneNumber) {
+						const phoneRegex = /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/;
+						if (phoneNumber && !phoneRegex.test(phoneNumber)) {
+							throw new Error('Invalid phone number');
+						}
+					}
+				}
+			},
 			password: {
 				type: DataTypes.STRING,
 				allowNull: false,

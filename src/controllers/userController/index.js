@@ -1,5 +1,6 @@
 import MainController from '../main';
 import db from '../../models';
+import { signUpValidator, userUpdateValidator } from '../../utils/validator';
 const { User } = db;
 class UserController extends MainController {
 	static async index(_req, res) {
@@ -17,11 +18,15 @@ class UserController extends MainController {
 
 	static async create(req, res) {
 		try {
-			const { username, password, email, phoneNumber } = req.body;
+			const { username, password, phoneNumber } = req.body;
+			await signUpValidator.validateAsync({
+				username,
+				password,
+				phoneNumber
+			});
 			const data = await User.create({
 				username,
 				password,
-				email,
 				phoneNumber
 			});
 			data.password = undefined;
@@ -51,11 +56,12 @@ class UserController extends MainController {
 		try {
 			const fields = [];
 			const { id } = req.params;
+			await userUpdateValidator.validateAsync(req.body);
 			const user = await User.findByPk(id);
 			if (!user) {
 				return MainController.handleFind(res);
 			}
-			['phoneNumber', 'name', 'username'].forEach(item => {
+			['email', 'name', 'username'].forEach(item => {
 				if (req.body[item]) user[item] = req.body[item];
 				if (req.body[item]) fields.push(item);
 			});

@@ -1,5 +1,5 @@
 @BASE_URL = {{$dotenv BASE_URL}}
-
+@TOKEN = {{$dotenv TEST_TOKEN_JWT}}
 ### /users
 GET {{BASE_URL}}/users
 Content-Type: application/json
@@ -7,19 +7,32 @@ Content-Type: application/json
 POST {{BASE_URL}}/users
 Content-Type: application/json
 
-{"username":"Jeana","password":"password", "email":"jean@gmail.com"}
+{"username":"Jeana","password":"password", "phoneNumber":"0789277275"}
 ###
-GET {{BASE_URL}}/users/dfe899b3-7232-4508-a18d-695eb40e5e59
+GET {{BASE_URL}}/users/b9fddadc-e0b8-409d-9f92-0fc1174cb696
 Content-Type: application/json
 ###
-PUT {{BASE_URL}}/users/dfe899b3-7232-4508-a18d-695eb40e5e59
+PUT {{BASE_URL}}/users/b9fddadc-e0b8-409d-9f92-0fc1174cb696
 Content-Type: application/json
 
-{"phoneNumber":"0789277275", "name":"Luc Abayo"}
+{"name":"Luc Abayo", "username":"abayo_luc", "email":"luc.bayo@gmail.com"}
 
 ###
 
-PUT {{BASE_URL}}/users/dfe899b3-7232-4508-a18d-695eb40e5e59/passwords
+PUT {{BASE_URL}}/users/b9fddadc-e0b8-409d-9f92-0fc1174cb696/passwords
 Content-Type: application/json
 
-{"password":"passwordkjhkaf"}
+{"password":"password1234"}
+
+
+### autnetication
+
+POST {{BASE_URL}}/users/authenticate/sign-in
+Content-Type: application/json
+
+{"phoneNumber":"0789277275", "password":"password1234"}
+
+###
+GET {{BASE_URL}}/users/authenticate/current
+Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
