@@ -1,28 +1,46 @@
 @BASE_URL = {{$dotenv BASE_URL}}
 @TOKEN = {{$dotenv TEST_TOKEN_JWT}}
+@ADMIN_TOKEN = {{$dotenv SUPER_ADMIN_TOKEN}}
+@SUPERVISOR_TOKEN = {{$dotenv SUPERVISOR_TOKEN}}
 ### /users
 GET {{BASE_URL}}/users
 Content-Type: application/json
+Authorization: Bearer {{ADMIN_TOKEN}}
 ###
 POST {{BASE_URL}}/users
 Content-Type: application/json
+Authorization: Bearer {{ADMIN_TOKEN}}
 
-{"username":"Jeana","password":"password", "phoneNumber":"0789277275"}
+{
+    "username":"abayo",
+    "password":"password",
+    "phoneNumber":"0789277287",
+    "companyId":"6faa1986-d9c9-42ab-a40e-477c1124581f"
+}
 ###
-GET {{BASE_URL}}/users/b9fddadc-e0b8-409d-9f92-0fc1174cb696
+GET {{BASE_URL}}/users/d6743d67-9d76-4cfd-86cc-d687bade836c
 Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
 ###
 PUT {{BASE_URL}}/users/b9fddadc-e0b8-409d-9f92-0fc1174cb696
 Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
 
-{"name":"Luc Abayo", "username":"abayo_luc", "email":"luc.bayo@gmail.com"}
+{
+    "name":"Luc Abayo",
+    "username":"abayo_luc",
+    "email":"luc.bayo@gmail.com"
+}
 
 ###
 
 PUT {{BASE_URL}}/users/b9fddadc-e0b8-409d-9f92-0fc1174cb696/passwords
 Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
 
-{"password":"password1234"}
+{
+    "password":"password1234"
+}
 
 
 ### autnetication
@@ -30,9 +48,53 @@ Content-Type: application/json
 POST {{BASE_URL}}/users/authenticate/sign-in
 Content-Type: application/json
 
-{"phoneNumber":"0789277275", "password":"password1234"}
+{
+    "phoneNumber":"0789277284",
+    "password":"password"
+}
 
 ###
 GET {{BASE_URL}}/users/authenticate/current
+Content-Type: application/json
+Authorization: Bearer {{SUPERVISOR_TOKEN}}
+
+
+### Company Routers
+
+GET {{BASE_URL}}/companies
+Content-Type: application/json
+Authorization: Bearer {{ADMIN_TOKEN}}
+
+###
+POST {{BASE_URL}}/companies
+Content-Type: application/json
+Authorization: Bearer {{ADMIN_TOKEN}}
+
+{
+    "name":"123 Inc.",
+    "email":"info@123inc.com",
+    "address":"KG 11 Av",
+    "phoneNumber":"0789277275"
+}
+
+###
+GET {{BASE_URL}}/companies/6faa1986-d9c9-42ab-a40e-477c1124581f
+Content-Type: application/json
+Authorization: Bearer {{SUPERVISOR_TOKEN}}
+
+###
+PUT {{BASE_URL}}/companies/9b849bf5-0139-4300-812b-d16c1c47e86a
+Content-Type: application/json
+Authorization: Bearer {{SUPERVISOR_TOKEN}}
+
+{
+    "name":"EDP Ltd",
+    "email":"info@edp.com",
+    "address":"GG 11 St",
+    "phoneNumber":"0789866365"
+}
+
+###
+DELETE {{BASE_URL}}/companies/6faa1986-d9c9-42ab-a40e-477c1124581f
 Content-Type: application/json
 Authorization: Bearer {{TOKEN}}

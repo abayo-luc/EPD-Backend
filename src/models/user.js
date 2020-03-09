@@ -74,6 +74,10 @@ module.exports = (sequelize, DataTypes) => {
 			blocked: {
 				type: DataTypes.BOOLEAN,
 				defaultValue: false
+			},
+			companyId: {
+				type: DataTypes.UUID,
+				allowNull: true
 			}
 		},
 		{
@@ -89,7 +93,10 @@ module.exports = (sequelize, DataTypes) => {
 		}
 	});
 	User.associate = function(models) {
-		// associations can be defined here
+		User.belongsTo(models.Company, {
+			foreignKey: 'companyId',
+			as: 'company'
+		});
 	};
 	return User;
 };
