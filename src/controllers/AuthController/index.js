@@ -2,6 +2,7 @@ import MainController from '../main';
 import AppToken from './AppToken';
 import db from '../../models';
 import { loginValidation } from '../../utils/validator';
+
 const { User } = db;
 class AuthController {
 	static async signIn(req, res) {
@@ -42,7 +43,6 @@ class AuthController {
 			return MainController.handleError(res, error);
 		}
 	}
-	static async refreshToken(req, res) {}
 }
 
 export default AuthController;

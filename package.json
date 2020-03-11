@@ -4,14 +4,16 @@
 	"description": "NodeJs REST API",
 	"main": "app.js",
 	"scripts": {
-		"test": "jest --collect-coverage",
-		"dev": "NODE_ENV=development nodemon --exec babel-node ./src/app.js",
-		"clean:dist": "rm -rf dist && mkdir dist",
-		"build-server": "babel -d ./dist ./src",
 		"build": "npm run clean:dist && npm run build-server",
 		"start": " node ./dist/app.js",
+		"dev": "NODE_ENV=development nodemon --exec babel-node ./src/app.js",
+		"test": "NODE_ENV=test npm run db:clean && NODE_ENV=test npm run db:migrate && NODE_ENV=test npm run db:seed && NODE_ENV=test jest --collect-coverage",
+		"clean:dist": "rm -rf dist && mkdir dist",
+		"build-server": "babel -d ./dist ./src",
+		"lint": "eslint . --fix --max-warnings=1",
+		"db:clean": "(node_modules/.bin/sequelize db:drop && node_modules/.bin/sequelize db:create) || node_modules/.bin/sequelize db:create",
 		"db:migrate": "node_modules/.bin/sequelize db:migrate",
-		"db:migrate:seed": "node_modules/.bin/sequelize db:seed:all"
+		"db:seed": "node_modules/.bin/sequelize db:seed:all"
 	},
 	"keywords": [
 		"NodeJS",
@@ -43,13 +45,31 @@
 		"@babel/node": "^7.7.0",
 		"@babel/preset-env": "^7.7.1",
 		"@babel/register": "^7.7.0",
+		"babel-eslint": "^10.1.0",
 		"babel-jest": "^24.8.0",
-		"eslint": "^6.6.0",
+		"eslint": "^6.8.0",
 		"eslint-config-airbnb-base": "^14.0.0",
 		"eslint-config-prettier": "^6.7.0",
+		"eslint-plugin-import": "^2.20.1",
 		"eslint-plugin-prettier": "3.1.1",
+		"faker": "^4.1.0",
+		"husky": "^4.2.3",
 		"jest": "^24.8.0",
+		"lint-staged": "^10.0.8",
 		"nodemon": "^2.0.0",
+		"pretty-quick": "^2.0.1",
 		"supertest": "^4.0.2"
+	},
+	"lint-staged": {
+		"*.js": [
+			"pretty-quick --staged",
+			"eslint src/ --fix"
+		]
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged",
+			"pre-push": "npm run test"
+		}
 	}
 }

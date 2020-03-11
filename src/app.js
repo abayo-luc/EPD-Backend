@@ -1,11 +1,10 @@
-import '@babel/polyfill';
-import app from './index';
+import app from "./index";
 
 const PORT = process.env.PORT || 3000;
 
 app.listen(
-	PORT,
-	() =>
-		process.env.NODE_ENV === 'development' &&
-		console.log(`Listening on port ${PORT}`)
+  PORT,
+  () =>
+    process.env.NODE_ENV === "development" &&
+    console.log(`Listening on port ${PORT}`)
 );
