@@ -1,5 +1,5 @@
 import { Router } from "express";
-import UserController from "../controllers/userController";
+import UserController from "../controllers/UserController";
 import authenticate from "../middleware/authenticate";
 import authorize, { roleAssignable } from "../middleware/authorize";
 

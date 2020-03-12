@@ -49,7 +49,7 @@ POST {{BASE_URL}}/users/authenticate/sign-in
 Content-Type: application/json
 
 {
-    "phoneNumber":"0789277284",
+    "phoneNumber":"0780000000",
     "password":"password"
 }
 
@@ -98,3 +98,10 @@ Authorization: Bearer {{SUPERVISOR_TOKEN}}
 DELETE {{BASE_URL}}/companies/6faa1986-d9c9-42ab-a40e-477c1124581f
 Content-Type: application/json
 Authorization: Bearer {{TOKEN}}
+
+
+### Sales record
+
+GET {{BASE_URL}}/sales
+Content-Type: application/json
+Authorization: Bearer {{ADMIN_TOKEN}}
