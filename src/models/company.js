@@ -1,4 +1,3 @@
-'use strict';
 module.exports = (sequelize, DataTypes) => {
 	const Company = sequelize.define(
 		'Company',
@@ -19,8 +18,8 @@ module.exports = (sequelize, DataTypes) => {
 				allowNull: false,
 				unique: true,
 				validate: {
-					invalid: function(email) {
-						const emailRegex = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+					invalid(email) {
+						const emailRegex = /^([a-zA-Z0-9_\-\\.]+)@([a-zA-Z0-9_\-\\.]+)\.([a-zA-Z]{2,5})$/;
 						if (email && !emailRegex.test(email)) {
 							throw new Error('Invalid email');
 						}
@@ -32,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
 				allowNull: false,
 				unique: true,
 				validate: {
-					invalid: function(phoneNumber) {
+					invalid(phoneNumber) {
 						const phoneRegex = /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/;
 						if (phoneNumber && !phoneRegex.test(phoneNumber)) {
 							throw new Error('Invalid phone number');
@@ -49,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
 			tableName: 'Companies'
 		}
 	);
-	Company.associate = function(models) {
+	Company.associate = models => {
 		Company.hasOne(models.User, {
 			foreignKey: 'companyId',
 			as: 'user'

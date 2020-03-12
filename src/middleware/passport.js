@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import db from '../models';
+
 dotenv.config();
 const { JWT_SECRET_KEY } = process.env;
 const options = {};

@@ -1,6 +1,7 @@
 import MainController from '../main';
 import db from '../../models';
 import { signUpValidator, userUpdateValidator } from '../../utils/validator';
+
 const { User, Company } = db;
 class UserController extends MainController {
 	static async index(_req, res) {
