@@ -3,7 +3,7 @@ import request from "../helpers/request";
 import getJWT from "../helpers/getJWT";
 import db from "../../src/models";
 
-const { User } = db;
+const { User, Company } = db;
 
 describe("#Users", () => {
   let tokens;
@@ -64,14 +64,15 @@ describe("#Users", () => {
         });
     });
 
-    ["admin", "supervisor", "superAdmin"].forEach((role, index) => {
-      it(`should allow ${role} to create a new user`, () => {
+    ["admin", "superAdmin"].forEach((role, index) => {
+      it(`should allow ${role} to create a new user and assign role`, () => {
         return request
           .post("/api/users")
           .send({
             username: faker.internet.userName().substr(0, 5),
             phoneNumber: `07221397${(index + 1) * 10}`,
-            password: "password"
+            password: "password",
+            role: "admin"
           })
           .set("Authorization", `Bearer ${tokens[role].token}`)
           .then(res => {
@@ -183,32 +184,42 @@ describe("#Users", () => {
       });
     });
 
-    it(`should allow supervisor to access other agent's data`, () => {
-      return request
-        .get(`/api/users/${tokens.agent.id}`)
-        .set("Authorization", `Bearer ${tokens.supervisor.token}`)
-        .then(res => {
-          const { error } = res.body;
-          expect(res.status).toEqual(404);
-          expect(error.message).toEqual("Record not found");
-        });
-    });
-    it("should not allows supervisor to access company agent data", async () => {
-      const supervisor = await User.findByPk(tokens.supervisor.id);
+    it(`should allow supervisor to access other agent's data`, async () => {
       const user = await User.create({
-        username: "agentOne1",
-        phoneNumber: "0733979713",
+        username: faker.internet.userName(),
+        phoneNumber: faker.phone.phoneNumberFormat(3),
         password: "password",
-        companyId: supervisor.companyId
+        companyId: tokens.supervisor.companyId
       });
       return request
-        .get(`/api/users/${user.id}`)
+        .get(`/api/companies/${tokens.supervisor.companyId}/users/${user.id}`)
         .set("Authorization", `Bearer ${tokens.supervisor.token}`)
         .then(res => {
           const { data } = res.body;
           expect(res.status).toEqual(200);
-          expect(data.id).toEqual(user.id);
-          expect(data.role).toEqual("agent");
+          expect(data.username).toEqual(user.username);
+        });
+    });
+    it("should not allows supervisor to access other company agent data", async () => {
+      const company = await Company.create({
+        name: faker.company.companyName(),
+        email: faker.internet.email(),
+        address: faker.address.streetAddress(),
+        phoneNumber: "0723165477"
+      });
+      const user = await User.create({
+        username: faker.internet.userName(),
+        phoneNumber: "0723165476",
+        password: "password",
+        companyId: company.id
+      });
+      return request
+        .get(`/api/companies/${company.id}/users/${user.id}`)
+        .set("Authorization", `Bearer ${tokens.supervisor.token}`)
+        .then(res => {
+          const { error } = res.body;
+          expect(res.status).toEqual(401);
+          expect(error.message).toEqual("Authorization failed.");
         });
     });
     it("should return error on invalid user id", () => {

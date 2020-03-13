@@ -6,6 +6,6 @@ import salesRouters from "./sales.routes";
 
 const routers = Router();
 
-routers.use(userRouters, authRouters, companyRouters, salesRouters);
+routers.use([authRouters, userRouters, companyRouters, salesRouters]);
 
 export default routers;

@@ -13,13 +13,40 @@ class SalesController {
     }
   }
 
+  static async companySales(req, res) {
+    try {
+      const data = await Sale.findAll({
+        where: {
+          companyId: req.user.companyId
+        }
+      });
+      return res.status(200).json({ data });
+    } catch (error) {
+      return MainController.handleError(res, error);
+    }
+  }
+
+  static async agentSales(req, res) {
+    try {
+      const data = await Sale.findAll({
+        where: {
+          userId: req.user.id
+        }
+      });
+      return res.status(200).json({ data });
+    } catch (error) {
+      return MainController.handleError(res, error);
+    }
+  }
+
   static async create(req, res) {
     try {
-      await validateSales.validateAsync({ ...req.body });
+      const { companyId } = req.params;
+      await validateSales.validateAsync({ ...req.body, companyId });
       const data = await Sale.create({
-        ...res.body,
-        userId: req.users.id,
-        companyId: req.users.companyId
+        ...req.body,
+        userId: req.user.id,
+        companyId
       });
       return res.status(201).json({ data });
     } catch (error) {
@@ -29,8 +56,8 @@ class SalesController {
 
   static async find(req, res) {
     try {
-      const { id } = req.params;
-      const data = await Sale.findByPk(id);
+      const { salesId } = req.params;
+      const data = await Sale.findByPk(salesId);
       return MainController.handleFind(res, data);
     } catch (error) {
       return MainController.handleError(res, error);
@@ -52,10 +79,12 @@ class SalesController {
         "district",
         "sector",
         "cell",
-        "village"
+        "village",
+        "age",
+        "sex"
       ].forEach(item => {
         if (req.body[item]) record[item] = req.body[item];
-        if (res.body[item]) fields.push(item);
+        if (req.body[item]) fields.push(item);
       });
       const data = await record.save({ fields });
       return res.status(200).json({ data });

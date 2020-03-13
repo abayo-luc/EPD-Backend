@@ -8,23 +8,27 @@ companyRouters.use(authenticate);
 companyRouters
   .get(
     "/companies",
-    authorize(["admin", "superAdmin"]),
+    authorize.allow(["admin", "superAdmin"]),
     CompanyController.index
   )
   .post(
     "/companies",
-    authorize(["admin", "superAdmin"]),
+    authorize.allow(["admin", "superAdmin"]),
     CompanyController.create
   )
-  .get("/companies/:id", CompanyController.find)
+  .get(
+    "/companies/:id",
+    authorize.allowOnlyMembers(["agent", "supervisor"]),
+    CompanyController.find
+  )
   .put(
     "/companies/:id",
-    authorize(["admin", "superAdmin", "owner"]),
+    authorize.allowOnlyMembers(["supervisor"]),
     CompanyController.update
   )
   .delete(
     "/companies/:id",
-    authorize(["admin", "superAdmin"]),
+    authorize.allow(["admin", "superAdmin"]),
     CompanyController.destroy
   );
 

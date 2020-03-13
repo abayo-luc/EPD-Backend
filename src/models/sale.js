@@ -39,6 +39,22 @@ module.exports = (sequelize, DataTypes) => {
       editable: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
+      },
+      sex: {
+        type: DataTypes.ENUM("male", "female"),
+        allowNull: false
+      },
+      age: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
+      companyId: {
+        type: DataTypes.UUID,
+        allowNull: false
+      },
+      userId: {
+        type: DataTypes.UUID,
+        allowNull: false
       }
     },
     {}

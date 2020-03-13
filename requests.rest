@@ -2,6 +2,7 @@
 @TOKEN = {{$dotenv TEST_TOKEN_JWT}}
 @ADMIN_TOKEN = {{$dotenv SUPER_ADMIN_TOKEN}}
 @SUPERVISOR_TOKEN = {{$dotenv SUPERVISOR_TOKEN}}
+@COMPANY_ID = 53d8cfb2-b6a7-4e61-8088-ae278ef2e5e0
 ### /users
 GET {{BASE_URL}}/users
 Content-Type: application/json
@@ -12,17 +13,16 @@ Content-Type: application/json
 Authorization: Bearer {{ADMIN_TOKEN}}
 
 {
-    "username":"abayo",
+    "username":"abayo34",
     "password":"password",
-    "phoneNumber":"0789277287",
-    "companyId":"6faa1986-d9c9-42ab-a40e-477c1124581f"
+    "phoneNumber":"0789277289"
 }
 ###
-GET {{BASE_URL}}/users/d6743d67-9d76-4cfd-86cc-d687bade836c
+GET {{BASE_URL}}/users/c871ed80-524f-4753-b1af-57ca85f9c165
 Content-Type: application/json
-Authorization: Bearer {{TOKEN}}
+Authorization: Bearer {{ADMIN_TOKEN}}
 ###
-PUT {{BASE_URL}}/users/b9fddadc-e0b8-409d-9f92-0fc1174cb696
+PUT {{BASE_URL}}/users/c871ed80-524f-4753-b1af-57ca85f9c165
 Content-Type: application/json
 Authorization: Bearer {{TOKEN}}
 
@@ -34,18 +34,18 @@ Authorization: Bearer {{TOKEN}}
 
 ###
 
-PUT {{BASE_URL}}/users/b9fddadc-e0b8-409d-9f92-0fc1174cb696/passwords
+PUT {{BASE_URL}}/users/c871ed80-524f-4753-b1af-57ca85f9c165/passwords
 Content-Type: application/json
 Authorization: Bearer {{TOKEN}}
 
 {
-    "password":"password1234"
+    "password":"password"
 }
 
 
 ### autnetication
 
-POST {{BASE_URL}}/users/authenticate/sign-in
+POST {{BASE_URL}}/authentication/sign-in
 Content-Type: application/json
 
 {
@@ -54,7 +54,7 @@ Content-Type: application/json
 }
 
 ###
-GET {{BASE_URL}}/users/authenticate/current
+GET {{BASE_URL}}/authentication/current
 Content-Type: application/json
 Authorization: Bearer {{SUPERVISOR_TOKEN}}
 
@@ -71,19 +71,20 @@ Content-Type: application/json
 Authorization: Bearer {{ADMIN_TOKEN}}
 
 {
-    "name":"123 Inc.",
-    "email":"info@123inc.com",
+    "name":"123 LTD",
+    "email":"info@123inc.me",
     "address":"KG 11 Av",
-    "phoneNumber":"0789277275"
+    "phoneNumber":"0789277287"
 }
 
 ###
-GET {{BASE_URL}}/companies/6faa1986-d9c9-42ab-a40e-477c1124581f
+GET {{BASE_URL}}/companies/a4ec5b44-8bae-40a8-8c90-d194d8b8a790
 Content-Type: application/json
 Authorization: Bearer {{SUPERVISOR_TOKEN}}
 
+
 ###
-PUT {{BASE_URL}}/companies/9b849bf5-0139-4300-812b-d16c1c47e86a
+PUT {{BASE_URL}}/companies/53d8cfb2-b6a7-4e61-8088-ae278ef2e5e0
 Content-Type: application/json
 Authorization: Bearer {{SUPERVISOR_TOKEN}}
 
@@ -93,11 +94,10 @@ Authorization: Bearer {{SUPERVISOR_TOKEN}}
     "address":"GG 11 St",
     "phoneNumber":"0789866365"
 }
-
 ###
 DELETE {{BASE_URL}}/companies/6faa1986-d9c9-42ab-a40e-477c1124581f
 Content-Type: application/json
-Authorization: Bearer {{TOKEN}}
+Authorization: Bearer {{SUPERVISOR_TOKEN}}
 
 
 ### Sales record
@@ -105,3 +105,50 @@ Authorization: Bearer {{TOKEN}}
 GET {{BASE_URL}}/sales
 Content-Type: application/json
 Authorization: Bearer {{ADMIN_TOKEN}}
+
+###
+POST {{BASE_URL}}/companies/{{COMPANY_ID}}/sales
+Content-Type: application/json
+Authorization: Bearer {{SUPERVISOR_TOKEN}}
+
+{
+    "clientName":"Luc Abayo",
+    "phoneNumber":"0789277275",
+    "province":"Kigali City",
+    "district":"Gasabo",
+    "sector":"Kimironko",
+    "cell":"Bibare",
+    "village":"Ingenzi",
+    "sex":"male",
+    "age":45
+}
+### get company sales
+GET {{BASE_URL}}/companies/{{COMPANY_ID}}/sales
+Content-Type: application/json
+Authorization: Bearer {{SUPERVISOR_TOKEN}}
+### get agent sales
+GET {{BASE_URL}}/companies/{{COMPANY_ID}}/users/c871ed80-524f-4753-b1af-57ca85f9c165/sales
+Content-Type: application/json
+Authorization: Bearer {{SUPERVISOR_TOKEN}}
+###
+
+PUT {{BASE_URL}}/companies/{{COMPANY_ID}}/sales/b501df6b-f16c-47d3-a073-db4897241dc1
+Content-Type: application/json
+Authorization: Bearer {{SUPERVISOR_TOKEN}}
+
+{
+    "clientName":"Fab Nkaka",
+    "phoneNumber":"0789277289",
+    "province":"Kigali City",
+    "district":"Gs",
+    "sector":"Km",
+    "cell":"Bib",
+    "village":"Igz",
+    "sex":"female",
+    "age":30
+}
+
+###
+GET {{BASE_URL}}/companies/{{COMPANY_ID}}/sales/b501df6b-f16c-47d3-a073-db4897241dc1
+Content-Type: application/json
+Authorization: Bearer {{SUPERVISOR_TOKEN}}
