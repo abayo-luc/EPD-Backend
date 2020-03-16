@@ -21,6 +21,12 @@ userRouters
     UserController.create
   )
   .get(
+    "/companies/:companyId/users",
+    authorize.allowOnlyMembers(["supervisor"]),
+    roleAssignable,
+    UserController.getCompanyUsers
+  )
+  .get(
     "/users/:id",
 
     authorize.allow(["admin", "superAdmin", "owner"]),
