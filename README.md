@@ -17,7 +17,7 @@ Project description [link](https://docs.google.com/document/d/1vHg6q6T6Nu9dptnJ1
 
 ### Login
 
-`POST /users/authenticate/sign-in`
+`POST /authentication/sign-in`
 
 ```source-json
 {
@@ -31,7 +31,7 @@ Project description [link](https://docs.google.com/document/d/1vHg6q6T6Nu9dptnJ1
 
 ### Current user
 
-`GET /users/authenticate/current`
+`GET /authentication/current`
 
 ```source-json
 {
