@@ -1,34 +1,46 @@
 import { Router } from "express";
-import UserController from "../controllers/userController";
+import UserController from "../controllers/UserController";
 import authenticate from "../middleware/authenticate";
 import authorize, { roleAssignable } from "../middleware/authorize";
 
 const userRouters = Router();
+userRouters.use(authenticate);
 userRouters
-  .get("/users", authenticate, authorize(["admin"]), UserController.index)
+  .get("/users", authorize.allow(["admin"]), UserController.index)
   .post(
     "/users",
-    authenticate,
-    authorize(["admin", "superAdmin", "supervisor"]),
+
+    authorize.allow(["admin", "superAdmin"]),
+    roleAssignable,
+    UserController.create
+  )
+  .post(
+    "/companies/:companyId/users",
+    authorize.allowOnlyMembers(["supervisor"]),
     roleAssignable,
     UserController.create
   )
   .get(
     "/users/:id",
-    authenticate,
-    authorize(["admin", "superAdmin", "owner", "supervisor"]),
+
+    authorize.allow(["admin", "superAdmin", "owner"]),
+    UserController.find
+  )
+  .get(
+    "/companies/:companyId/users/:id",
+    authorize.allowOnlyMembers(["owner", "supervisor"]),
     UserController.find
   )
   .put(
     "/users/:id",
-    authenticate,
-    authorize(["admin", "owner"]),
+
+    authorize.allow(["admin", "owner"]),
     UserController.update
   )
   .put(
     "/users/:id/passwords",
-    authenticate,
-    authorize(["admin", "owner"]),
+
+    authorize.allow(["admin", "owner"]),
     UserController.updatePassword
   );
 export default userRouters;

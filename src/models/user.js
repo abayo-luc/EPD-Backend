@@ -77,7 +77,9 @@ module.exports = (sequelize, DataTypes) => {
       companyId: {
         type: DataTypes.UUID,
         allowNull: true
-      }
+      },
+      address: DataTypes.STRING,
+      avatar: DataTypes.STRING
     },
     {
       tableName: "Users"

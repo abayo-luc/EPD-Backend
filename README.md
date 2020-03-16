@@ -44,7 +44,9 @@ Project description [link](https://docs.google.com/document/d/1vHg6q6T6Nu9dptnJ1
 
 ### Create a new user
 
-`POST /users`
+`POST /users` (for admin)
+
+`POST /companies/:companyId/users` (for supervisor)
 
 ```source-json
 {
@@ -61,7 +63,9 @@ Project description [link](https://docs.google.com/document/d/1vHg6q6T6Nu9dptnJ1
 
 ### Get all users
 
-`GET /users`
+`GET /users` (for admin)
+
+`GET /companies/:companyId/users` (for supervisor)
 
 ```source-json
 {
@@ -72,7 +76,9 @@ Project description [link](https://docs.google.com/document/d/1vHg6q6T6Nu9dptnJ1
 
 ### Get one users
 
-`GET /users/:id`
+`GET /users/:id` (for admin and owner)
+
+`GET /companies/:companyId/users/:id` (for supervisor)
 
 ```source-json
 {
@@ -179,3 +185,24 @@ Project description [link](https://docs.google.com/document/d/1vHg6q6T6Nu9dptnJ1
     "Authorization":{{TOKEN}}
 }
 ```
+
+# Sales
+
+### Get all sales
+
+`GET /sales` (for only admins)
+
+```source-json
+{
+    "Content-type": "application/json",
+    "Authorization":{{TOKEN}}
+}
+```
+
+### Get all company sales
+
+`GET /companies/:companyId/sales`
+
+### Get all agent sales
+
+`GET /companies/:companyId/`

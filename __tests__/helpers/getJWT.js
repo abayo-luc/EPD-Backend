@@ -23,7 +23,7 @@ export default async (
           role: admin.role
         }
       );
-      return { token, id: admin.id };
+      return { token, id: admin.id, companyId: admin.companyId };
     })
   );
   const values = await Promise.all(promises);

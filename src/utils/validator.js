@@ -59,3 +59,19 @@ export const companyUpdateValidator = Joi.object({
   email: Joi.string().email(),
   address: Joi.string()
 });
+
+export const validateSales = Joi.object({
+  clientName: Joi.string().required(),
+  phoneNumber: Joi.string()
+    .regex(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im)
+    .message("Invalid phone number")
+    .required(),
+  province: Joi.string().required(),
+  district: Joi.string().required(),
+  sector: Joi.string().required(),
+  cell: Joi.string().required(),
+  village: Joi.string().required(),
+  companyId: Joi.string().required(),
+  sex: Joi.string().valid("male", "female"),
+  age: Joi.number().required()
+});

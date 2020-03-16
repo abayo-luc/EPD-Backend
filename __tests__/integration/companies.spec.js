@@ -77,15 +77,17 @@ describe("#Companies", () => {
   });
   describe("GET /companies/:id", () => {
     it("should allow supervisor to access their company", async () => {
-      const supervisor = await User.findByPk(tokens.supervisor.id);
       return request
-        .get(`/api/companies/${supervisor.companyId}`)
+        .get(`/api/companies/${tokens.supervisor.companyId}`)
         .set("Authorization", `Bearer ${tokens.supervisor.token}`)
         .then(res => {
           expect(res.status).toEqual(200);
         });
     });
     it("should allow agent to access their company", async () => {
+      const agent = await User.findByPk(tokens.agent.id);
+      agent.companyId = company.id;
+      await agent.save({ fields: ["companyId"] });
       return request
         .get(`/api/companies/${company.id}`)
         .set("Authorization", `Bearer ${tokens.agent.token}`)
@@ -93,6 +95,10 @@ describe("#Companies", () => {
           const { data } = res.body;
           expect(res.status).toEqual(200);
           expect(data.id).toEqual(company.id);
+        })
+        .then(async () => {
+          agent.companyId = null;
+          await agent.save({ fields: ["companyId"] });
         });
     });
   });
