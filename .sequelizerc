@@ -1,8 +1,8 @@
 const path = require('path');
-
+const homePath = process.env.NODE_ENV === 'product' ? 'dist' : 'src';
 module.exports = {
-  'config': path.resolve('./dist/config', 'config.js'),
-  'models-path': path.resolve('./dist', 'models'),
-  'seeders-path': path.resolve('./dist', 'seeders'),
-  'migrations-path': path.resolve('./dist', 'migrations')
-}
+	config: path.resolve(`./${homePath}/config`, 'config.js'),
+	'models-path': path.resolve(`./${homePath}`, 'models'),
+	'seeders-path': path.resolve(`./${homePath}`, 'seeders'),
+	'migrations-path': path.resolve(`./${homePath}`, 'migrations')
+};
