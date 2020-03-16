@@ -17,7 +17,7 @@ salesRouters
     SalesController.companySales
   )
   .get(
-    "/companies/users/:id/sales",
+    "/companies/:companyId/users/:id/sales",
     authorize.allow(["owner"]),
     SalesController.agentSales
   )
@@ -32,7 +32,7 @@ salesRouters
     SalesController.find
   )
   .get(
-    "/companies/users/:id/sales/:salesId",
+    "/companies/:companyId/users/:id/sales/:salesId",
     authorize.allow(["owner"]),
     SalesController.find
   )
@@ -42,7 +42,7 @@ salesRouters
     SalesController.update
   )
   .put(
-    "/companies/users/:id/sales/:salesId",
+    "/companies/:companyId/users/:id/sales/:salesId",
     authorize.allow(["owner"]),
     SalesController.update
   );

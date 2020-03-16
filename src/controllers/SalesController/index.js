@@ -30,7 +30,7 @@ class SalesController {
     try {
       const data = await Sale.findAll({
         where: {
-          userId: req.user.id
+          userId: req.params?.id
         }
       });
       return res.status(200).json({ data });
@@ -66,8 +66,8 @@ class SalesController {
 
   static async update(req, res) {
     try {
-      const { id } = req.params;
-      const record = await Sale.findByPk(id);
+      const { id, salesId } = req.params;
+      const record = await Sale.findByPk(salesId || id);
       if (!record) {
         return MainController.handleFind(res);
       }
