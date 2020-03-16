@@ -1,21 +1,49 @@
 import MainController from "../main";
 import db from "../../models";
 import { signUpValidator, userUpdateValidator } from "../../utils/validator";
+import { textSearch, paginate } from "../../utils/queryHelper";
 
 const { User, Company } = db;
 class UserController extends MainController {
-  static async index(_req, res) {
+  static async index(req, res) {
     try {
+      const { search, limit, page } = req.query;
       const data = await User.findAll({
         attributes: {
           exclude: ["password"]
         },
+        where: {
+          ...textSearch(search, ["name", "phoneNumber", "username"])
+        },
+        order: [["updatedAt", "ASC"]],
+        ...paginate({ limit, page }),
         include: [
           {
             model: Company,
             as: "company"
           }
         ]
+      });
+      return res.status(200).json({ data });
+    } catch (error) {
+      return MainController.handleError(res, error);
+    }
+  }
+
+  static async getCompanyUsers(req, res) {
+    try {
+      const { companyId } = req.params;
+      const { search, limit, page } = req.query;
+      const data = await User.findAll({
+        attributes: {
+          exclude: ["password"]
+        },
+        where: {
+          companyId,
+          ...textSearch(search, ["name", "phoneNumber", "username"])
+        },
+        order: [["updatedAt", "ASC"]],
+        ...paginate({ page, limit })
       });
       return res.status(200).json({ data });
     } catch (error) {

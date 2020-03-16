@@ -1,12 +1,27 @@
 import MainController from "../main";
 import db from "../../models";
 import { validateSales } from "../../utils/validator";
+import { paginate, textSearch } from "../../utils/queryHelper";
 
 const { Sale } = db;
 class SalesController {
   static async index(req, res) {
     try {
-      const data = await Sale.findAll();
+      const { search, page = 1, limit = 15 } = req.query;
+      const data = await Sale.findAll({
+        where: {
+          ...textSearch(search, [
+            "clientName",
+            "province",
+            "district",
+            "sector",
+            "cell",
+            "village"
+          ])
+        },
+        order: [["updatedAt", "ASC"]],
+        ...paginate({ page, limit })
+      });
       return res.status(200).json({ data });
     } catch (error) {
       return MainController.handleError(res, error);
@@ -15,10 +30,22 @@ class SalesController {
 
   static async companySales(req, res) {
     try {
+      const { search, page = 1, limit = 15 } = req.query;
+      const { companyId } = req.params;
       const data = await Sale.findAll({
         where: {
-          companyId: req.user.companyId
-        }
+          companyId,
+          ...textSearch(search, [
+            "clientName",
+            "province",
+            "district",
+            "sector",
+            "cell",
+            "village"
+          ])
+        },
+        order: [["updatedAt", "ASC"]],
+        ...paginate({ page, limit })
       });
       return res.status(200).json({ data });
     } catch (error) {
@@ -28,10 +55,21 @@ class SalesController {
 
   static async agentSales(req, res) {
     try {
+      const { search, page = 1, limit = 15 } = req.query;
       const data = await Sale.findAll({
         where: {
-          userId: req.params?.id
-        }
+          userId: req.params?.id,
+          ...textSearch(search, [
+            "clientName",
+            "province",
+            "district",
+            "sector",
+            "cell",
+            "village"
+          ])
+        },
+        order: [["updatedAt", "ASC"]],
+        ...paginate({ page, limit })
       });
       return res.status(200).json({ data });
     } catch (error) {

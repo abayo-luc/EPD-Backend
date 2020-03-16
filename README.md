@@ -13,6 +13,16 @@ Project description [link](https://docs.google.com/document/d/1vHg6q6T6Nu9dptnJ1
 
 # API Endpoints
 
+### Search and filter
+
+For searching and filter all GET all endpoints access the following query params:
+
+- search: which is a text you are trying to search
+- Page: page number form 1 to ...
+- Limit: which is the size of results to be returned per page
+
+  example: `/sales?page=2&limit=15&search=FAB`
+
 ## Authentication
 
 ### Login

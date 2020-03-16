@@ -8,6 +8,10 @@ GET {{BASE_URL}}/users
 Content-Type: application/json
 Authorization: Bearer {{ADMIN_TOKEN}}
 ###
+GET {{BASE_URL}}/companies/{{COMPANY_ID}}/users
+Content-Type: application/json
+Authorization: Bearer {{ADMIN_TOKEN}}
+###
 POST {{BASE_URL}}/users
 Content-Type: application/json
 Authorization: Bearer {{ADMIN_TOKEN}}
@@ -112,7 +116,7 @@ Content-Type: application/json
 Authorization: Bearer {{SUPERVISOR_TOKEN}}
 
 {
-    "clientName":"Luc Abayo",
+    "clientName":"Manzi Abayo",
     "phoneNumber":"0789277275",
     "province":"Kigali City",
     "district":"Gasabo",

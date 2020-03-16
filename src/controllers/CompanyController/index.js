@@ -4,11 +4,19 @@ import {
   companyValidator,
   companyUpdateValidator
 } from "../../utils/validator";
+import { textSearch, paginate } from "../../utils/queryHelper";
 
 class CompanyController {
-  static async index(_req, res) {
+  static async index(req, res) {
     try {
-      const data = await db.Company.findAll({});
+      const { search, limit, page } = req.query;
+      const data = await db.Company.findAll({
+        where: {
+          ...textSearch(search, ["name", "phoneNumber", "email"])
+        },
+        order: [["updatedAt", "ASC"]],
+        ...paginate({ page, limit })
+      });
       return res.status(200).json({ data });
     } catch (error) {
       return MainController.handleError(res, error);
