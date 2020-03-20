@@ -48,7 +48,8 @@ export const companyValidator = Joi.object({
   email: Joi.string()
     .email()
     .required(),
-  address: Joi.string()
+  address: Joi.string(),
+  password: Joi.string().min(6)
 });
 
 export const companyUpdateValidator = Joi.object({

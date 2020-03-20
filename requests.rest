@@ -75,10 +75,10 @@ Content-Type: application/json
 Authorization: Bearer {{ADMIN_TOKEN}}
 
 {
-    "name":"123 LTD",
-    "email":"info@123inc.me",
+    "name":"Luc LTD",
+    "email":"info@luc.me",
     "address":"KG 11 Av",
-    "phoneNumber":"0789277287"
+    "phoneNumber":"0722131487"
 }
 
 ###

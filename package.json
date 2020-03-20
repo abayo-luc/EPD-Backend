@@ -1,75 +1,76 @@
 {
-	"name": "new-nodejs-app",
-	"version": "1.0.0",
-	"description": "NodeJs REST API",
-	"main": "app.js",
-	"scripts": {
-		"build": "npm run clean:dist && npm run build-server",
-		"start": "node ./dist/app.js",
-		"dev": "NODE_ENV=development nodemon --exec babel-node ./src/app.js",
-		"test": "NODE_ENV=test npm run db:clean && NODE_ENV=test npm run db:migrate && NODE_ENV=test npm run db:seed && NODE_ENV=test jest --collect-coverage",
-		"clean:dist": "rm -rf dist && mkdir dist",
-		"build-server": "babel -d ./dist ./src",
-		"lint": "eslint . --fix --max-warnings=1",
-		"db:clean": "(node_modules/.bin/sequelize db:drop && node_modules/.bin/sequelize db:create) || node_modules/.bin/sequelize db:create",
-		"db:migrate": "node_modules/.bin/sequelize db:migrate",
-		"db:seed": "node_modules/.bin/sequelize db:seed:all"
-	},
-	"keywords": [
-		"NodeJS",
-		"generate-node-project"
-	],
-	"author": "",
-	"license": "MIT",
-	"dependencies": {
-		"@babel/polyfill": "^7.8.7",
-		"@hapi/joi": "^17.1.0",
-		"bcrypt": "^4.0.1",
-		"cors": "^2.8.5",
-		"dotenv": "^8.2.0",
-		"express": "^4.17.1",
-		"joi-phone-number": "^4.0.0",
-		"jsonwebtoken": "^8.5.1",
-		"lodash": "^4.17.15",
-		"passport": "^0.4.1",
-		"passport-jwt": "^4.0.0",
-		"pg": "^7.8.0",
-		"pg-hstore": "^2.3.2",
-		"sequelize": "^4.42.0",
-		"sequelize-cli": "^5.4.0",
-		"uuid": "^7.0.2"
-	},
-	"devDependencies": {
-		"@babel/cli": "^7.7.0",
-		"@babel/core": "^7.7.2",
-		"@babel/node": "^7.7.0",
-		"@babel/preset-env": "^7.7.1",
-		"@babel/register": "^7.7.0",
-		"babel-eslint": "^10.1.0",
-		"babel-jest": "^24.8.0",
-		"eslint": "^6.8.0",
-		"eslint-config-airbnb-base": "^14.0.0",
-		"eslint-config-prettier": "^6.7.0",
-		"eslint-plugin-import": "^2.20.1",
-		"eslint-plugin-prettier": "3.1.1",
-		"faker": "^4.1.0",
-		"husky": "^4.2.3",
-		"jest": "^24.8.0",
-		"lint-staged": "^10.0.8",
-		"nodemon": "^2.0.0",
-		"pretty-quick": "^2.0.1",
-		"supertest": "^4.0.2"
-	},
-	"lint-staged": {
-		"*.js": [
-			"pretty-quick --staged",
-			"eslint src/ --fix"
-		]
-	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "lint-staged",
-			"pre-push": "npm run test"
-		}
-	}
+  "name": "new-nodejs-app",
+  "version": "1.0.0",
+  "description": "NodeJs REST API",
+  "main": "app.js",
+  "scripts": {
+    "build": "npm run clean:dist && npm run build-server",
+    "start": "node ./dist/app.js",
+    "dev": "NODE_ENV=development nodemon --exec babel-node ./src/app.js",
+    "test": "NODE_ENV=test npm run db:clean && NODE_ENV=test npm run db:migrate && NODE_ENV=test npm run db:seed && NODE_ENV=test jest --collect-coverage",
+    "clean:dist": "rm -rf dist && mkdir dist",
+    "build-server": "babel -d ./dist ./src",
+    "lint": "eslint . --fix --max-warnings=1",
+    "db:clean": "(node_modules/.bin/sequelize db:drop && node_modules/.bin/sequelize db:create) || node_modules/.bin/sequelize db:create",
+    "db:migrate": "node_modules/.bin/sequelize db:migrate",
+    "db:seed": "node_modules/.bin/sequelize db:seed:all"
+  },
+  "keywords": [
+    "NodeJS",
+    "generate-node-project"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/polyfill": "^7.8.7",
+    "@hapi/joi": "^17.1.0",
+    "bcrypt": "^4.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "joi-phone-number": "^4.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.15",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "pg": "^7.8.0",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.42.0",
+    "sequelize-cli": "^5.4.0",
+    "uuid": "^7.0.2",
+    "faker": "^4.1.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.7.0",
+    "@babel/core": "^7.7.2",
+    "@babel/node": "^7.7.0",
+    "@babel/preset-env": "^7.7.1",
+    "@babel/register": "^7.7.0",
+    "babel-eslint": "^10.1.0",
+    "babel-jest": "^24.8.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-prettier": "3.1.1",
+    "husky": "^4.2.3",
+    "jest": "^24.8.0",
+    "lint-staged": "^10.0.8",
+    "nodemon": "^2.0.0",
+    "prettier": "^1.19.1",
+    "pretty-quick": "^2.0.1",
+    "supertest": "^4.0.2"
+  },
+  "lint-staged": {
+    "*.js": [
+      "pretty-quick --staged",
+      "eslint src/ --fix"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm run test"
+    }
+  }
 }

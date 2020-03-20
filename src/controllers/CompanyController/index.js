@@ -4,7 +4,7 @@ import {
   companyValidator,
   companyUpdateValidator
 } from "../../utils/validator";
-import { textSearch, paginate } from "../../utils/queryHelper";
+import { textSearch, paginate, genSupervisor } from "../../utils/queryHelper";
 
 class CompanyController {
   static async index(req, res) {
@@ -25,19 +25,27 @@ class CompanyController {
 
   static async create(req, res) {
     try {
-      const { phoneNumber, name, email, address } = req.body;
+      const { phoneNumber, name, email, address, password } = req.body;
       await companyValidator.validateAsync({
         phoneNumber,
         name,
         email,
-        address
+        address,
+        password
       });
-      const data = await db.Company.create({
-        phoneNumber,
-        name,
-        email,
-        address
-      });
+      const supervisor = await genSupervisor({ name, phoneNumber, password });
+      const data = await db.Company.create(
+        {
+          phoneNumber,
+          name,
+          email,
+          address,
+          user: supervisor
+        },
+        {
+          include: "user"
+        }
+      );
       return res.status(201).json({ data });
     } catch (error) {
       return MainController.handleError(res, error);
