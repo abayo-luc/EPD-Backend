@@ -54,13 +54,14 @@ class UserController extends MainController {
   static async create(req, res) {
     try {
       const { username, password, phoneNumber, role, companyId } = req.body;
+      const { companyId: userCompanyId } = req.user;
       await signUpValidator.validateAsync(req.body);
       const data = await User.create({
         username,
         password,
         phoneNumber,
         role,
-        companyId
+        companyId: companyId || userCompanyId
       });
       data.password = undefined;
       return res.status(201).json({

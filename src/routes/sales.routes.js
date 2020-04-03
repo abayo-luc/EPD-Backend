@@ -23,7 +23,7 @@ salesRouters
   )
   .post(
     "/companies/:companyId/sales",
-    authorize.allowOnlyMembers(["supervisor"]),
+    authorize.allowOnlyMembers(["supervisor", "agent"]),
     SalesController.create
   )
   .get(
