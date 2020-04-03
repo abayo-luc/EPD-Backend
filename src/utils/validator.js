@@ -74,5 +74,6 @@ export const validateSales = Joi.object({
   village: Joi.string().required(),
   companyId: Joi.string().required(),
   sex: Joi.string().valid("male", "female"),
-  age: Joi.number().required()
+  age: Joi.number().required(),
+  editable: Joi.boolean()
 });
