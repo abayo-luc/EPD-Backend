@@ -56,9 +56,11 @@ class SalesController {
   static async agentSales(req, res) {
     try {
       const { search, page = 1, limit = 15 } = req.query;
+      const { type } = req.params;
       const data = await Sale.findAll({
         where: {
           userId: req.params?.id,
+          editable: type.toLowerCase() === "editable",
           ...textSearch(search, [
             "clientName",
             "province",
