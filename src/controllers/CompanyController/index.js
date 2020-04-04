@@ -4,7 +4,7 @@ import {
   companyValidator,
   companyUpdateValidator
 } from "../../utils/validator";
-import { textSearch, paginate, genSupervisor } from "../../utils/queryHelper";
+import { textSearch, paginate, generateUser } from "../../utils/queryHelper";
 
 class CompanyController {
   static async index(req, res) {
@@ -33,7 +33,12 @@ class CompanyController {
         address,
         password
       });
-      const supervisor = await genSupervisor({ name, phoneNumber, password });
+      const supervisor = await generateUser({
+        name,
+        phoneNumber,
+        password,
+        role: "supervisor"
+      });
       const data = await db.Company.create(
         {
           phoneNumber,

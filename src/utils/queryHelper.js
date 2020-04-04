@@ -22,13 +22,19 @@ export const paginate = ({ page = 1, limit = 50 }) => {
   };
 };
 
-export const genSupervisor = ({ name, phoneNumber, password }) => ({
-  username: faker.internet.userName(name),
+export const generateUser = ({
+  name,
+  username,
+  phoneNumber,
+  password,
+  role
+}) => ({
+  username: username || faker.internet.userName(name),
   phoneNumber,
   password:
     password ||
     Math.random()
       .toString(36)
       .slice(-8),
-  role: "supervisor"
+  role: role || "agent"
 });

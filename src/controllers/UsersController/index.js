@@ -58,7 +58,11 @@ class UserController extends MainController {
       await signUpValidator.validateAsync(req.body);
       const data = await User.create({
         username,
-        password,
+        password:
+          password ||
+          Math.random()
+            .toString(36)
+            .slice(-8),
         phoneNumber,
         role,
         companyId: companyId || userCompanyId
