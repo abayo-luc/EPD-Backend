@@ -10,7 +10,7 @@ class CompanyController {
   static async index(req, res) {
     try {
       const { search, limit, page } = req.query;
-      const data = await db.Company.findAll({
+      const data = await db.Company.findAndCountAll({
         where: {
           ...textSearch(search, ["name", "phoneNumber", "email"])
         },

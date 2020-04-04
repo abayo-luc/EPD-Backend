@@ -8,7 +8,7 @@ class UserController extends MainController {
   static async index(req, res) {
     try {
       const { search, limit, page } = req.query;
-      const data = await User.findAll({
+      const data = await User.findAndCountAll({
         attributes: {
           exclude: ["password"]
         },
@@ -34,7 +34,7 @@ class UserController extends MainController {
     try {
       const { companyId } = req.params;
       const { search, limit, page } = req.query;
-      const data = await User.findAll({
+      const data = await User.findAndCountAll({
         attributes: {
           exclude: ["password"]
         },
