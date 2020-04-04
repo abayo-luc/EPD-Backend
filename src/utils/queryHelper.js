@@ -22,7 +22,7 @@ export const paginate = ({ page = 1, limit = 50 }) => {
   };
 };
 
-export const generateUser = ({ name, phoneNumber, password, role }) => ({
+export const genSupervisor = ({ name, phoneNumber, password }) => ({
   username: faker.internet.userName(name),
   phoneNumber,
   password:
@@ -30,5 +30,5 @@ export const generateUser = ({ name, phoneNumber, password, role }) => ({
     Math.random()
       .toString(36)
       .slice(-8),
-  role: role || "agent"
+  role: "supervisor"
 });

@@ -13,8 +13,9 @@ export const loginValidation = Joi.object({
 export const signUpValidator = Joi.object({
   username: Joi.string()
     .max(15)
-    .min(3),
-  password: Joi.string(),
+    .min(3)
+    .required(),
+  password: Joi.string().required(),
   phoneNumber: Joi.string()
     .regex(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im)
     .message("Invalid phone number")
