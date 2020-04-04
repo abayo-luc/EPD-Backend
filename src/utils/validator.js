@@ -21,6 +21,8 @@ export const signUpValidator = Joi.object({
     .message("Invalid phone number")
     .required(),
   role: Joi.string().valid("admin", "supervisor", "agent"),
+  address: Joi.string(),
+  name: Joi.string(),
   companyId: Joi.string().when("role", {
     is: "supervisor",
     then: Joi.string()
