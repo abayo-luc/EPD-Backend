@@ -90,6 +90,7 @@ describe("#Users", () => {
         .then(res => {
           const { error } = res.body;
           expect(res.status).toEqual(400);
+          expect(error.username).toEqual("username is required");
           expect(error.phoneNumber).toEqual("phoneNumber is required");
           expect(error.password).toEqual("password is required");
         });
