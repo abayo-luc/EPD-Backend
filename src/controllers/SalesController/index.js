@@ -8,7 +8,7 @@ class SalesController {
   static async index(req, res) {
     try {
       const { search, page = 1, limit = 15 } = req.query;
-      const data = await Sale.findAll({
+      const data = await Sale.findAndCountAll({
         where: {
           ...textSearch(search, [
             "clientName",
@@ -32,7 +32,7 @@ class SalesController {
     try {
       const { search, page = 1, limit = 15 } = req.query;
       const { companyId } = req.params;
-      const data = await Sale.findAll({
+      const data = await Sale.findAndCountAll({
         where: {
           companyId,
           ...textSearch(search, [
@@ -56,7 +56,7 @@ class SalesController {
   static async agentSales(req, res) {
     try {
       const { search, page = 1, limit = 15, type = "" } = req.query;
-      const data = await Sale.findAll({
+      const data = await Sale.findAndCountAll({
         where: {
           userId: req.params?.id,
           editable: type.toLowerCase() === "editable",

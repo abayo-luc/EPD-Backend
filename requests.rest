@@ -4,7 +4,7 @@
 @SUPERVISOR_TOKEN = {{$dotenv SUPERVISOR_TOKEN}}
 @COMPANY_ID = 53d8cfb2-b6a7-4e61-8088-ae278ef2e5e0
 ### /users
-GET {{BASE_URL}}/users
+GET {{BASE_URL}}/users?limit=3
 Content-Type: application/json
 Authorization: Bearer {{ADMIN_TOKEN}}
 ###
