@@ -29,7 +29,7 @@ describe("#Users", () => {
           .then(res => {
             const { data } = res.body;
             expect(res.status).toEqual(200);
-            expect(data).toBeInstanceOf(Array);
+            expect(data.rows).toBeInstanceOf(Array);
             expect(data.length).toBeDefined();
           });
       });
