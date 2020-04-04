@@ -1,7 +1,7 @@
 import MainController from "../main";
 import db from "../../models";
 import { signUpValidator, userUpdateValidator } from "../../utils/validator";
-import { textSearch, paginate, generateUser } from "../../utils/queryHelper";
+import { textSearch, paginate } from "../../utils/queryHelper";
 
 const { User, Company } = db;
 class UserController extends MainController {
@@ -56,14 +56,15 @@ class UserController extends MainController {
       const { username, password, phoneNumber, role, companyId } = req.body;
       const { companyId: userCompanyId } = req.user;
       await signUpValidator.validateAsync(req.body);
-      const user = generateUser({
-        name: username,
-        password,
-        phoneNumber,
-        role
-      });
       const data = await User.create({
-        ...user,
+        username,
+        password:
+          password ||
+          Math.random()
+            .toString(36)
+            .slice(-8),
+        phoneNumber,
+        role,
         companyId: companyId || userCompanyId
       });
       data.password = undefined;

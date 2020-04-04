@@ -22,8 +22,14 @@ export const paginate = ({ page = 1, limit = 50 }) => {
   };
 };
 
-export const generateUser = ({ name, phoneNumber, password, role }) => ({
-  username: faker.internet.userName(name),
+export const generateUser = ({
+  name,
+  username,
+  phoneNumber,
+  password,
+  role
+}) => ({
+  username: username || faker.internet.userName(name),
   phoneNumber,
   password:
     password ||

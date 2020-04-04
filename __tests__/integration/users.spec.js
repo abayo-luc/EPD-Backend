@@ -91,7 +91,6 @@ describe("#Users", () => {
           const { error } = res.body;
           expect(res.status).toEqual(400);
           expect(error.phoneNumber).toEqual("phoneNumber is required");
-          expect(error.password).toEqual("password is required");
         });
     });
     it("should return validation error on invalid username", () => {
