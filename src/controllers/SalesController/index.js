@@ -19,6 +19,16 @@ class SalesController {
             "village"
           ])
         },
+        include: [
+          {
+            model: db.User,
+            as: "user",
+            attributes: {
+              exclude: ["password", "role", "companyId"]
+            }
+          },
+          { model: db.Company, as: "company" }
+        ],
         order: [["updatedAt", "ASC"]],
         ...paginate({ page, limit })
       });
@@ -44,6 +54,16 @@ class SalesController {
             "village"
           ])
         },
+        include: [
+          {
+            model: db.User,
+            as: "user",
+            attributes: {
+              exclude: ["password", "role", "companyId"]
+            }
+          },
+          { model: db.Company, as: "company" }
+        ],
         order: [["updatedAt", "ASC"]],
         ...paginate({ page, limit })
       });
@@ -69,6 +89,16 @@ class SalesController {
             "village"
           ])
         },
+        include: [
+          {
+            model: db.User,
+            as: "user",
+            attributes: {
+              exclude: ["password", "role", "companyId"]
+            }
+          },
+          { model: db.Company, as: "company" }
+        ],
         order: [["updatedAt", "ASC"]],
         ...paginate({ page, limit })
       });
