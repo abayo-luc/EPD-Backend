@@ -10,7 +10,7 @@ const months = moment
     {}
   );
 
-const getByYear = year => ({
+const getByYear = (year) => ({
   $and: [
     {
       createdAt: {
@@ -19,13 +19,13 @@ const getByYear = year => ({
           .format("YYYY-MM-DD"),
         [Op.lt]: moment([year])
           .endOf("year")
-          .format("YYYY-MM-DD")
-      }
-    }
-  ]
+          .format("YYYY-MM-DD"),
+      },
+    },
+  ],
 });
 
-const getByWeek = week => ({
+const getByWeek = (week) => ({
   $and: [
     {
       createdAt: {
@@ -34,10 +34,10 @@ const getByWeek = week => ({
           .format("YYYY-MM-DD"),
         [Op.lt]: moment(week)
           .endOf("week")
-          .format("YYYY-MM-DD")
-      }
-    }
-  ]
+          .format("YYYY-MM-DD"),
+      },
+    },
+  ],
 });
 
 export default class SalesStats {
@@ -47,8 +47,8 @@ export default class SalesStats {
       const sales = await db.Sale.findAll({
         where: {
           ...getByYear(year),
-          editable: false
-        }
+          editable: false,
+        },
       });
       const data = sales.reduce(
         (prevValue, currentValue) => {
@@ -57,7 +57,7 @@ export default class SalesStats {
             ?.toLowerCase();
           return {
             ...prevValue,
-            [currentMonth]: [currentValue, ...prevValue[currentMonth]]
+            [currentMonth]: [currentValue, ...prevValue[currentMonth]],
           };
         },
         { ...months }
@@ -72,7 +72,6 @@ export default class SalesStats {
   static async salesVsCompany(req, res) {
     try {
       const { year = new Date().getFullYear() } = req.query;
-
       const companySales = await db.Company.findAll({
         include: [
           {
@@ -80,15 +79,14 @@ export default class SalesStats {
             as: "sales",
             where: {
               ...getByYear(year),
-              editable: false
-            }
-          }
+              editable: false,
+            },
+          },
         ],
-        groupe: ["sales.id"]
+        groupe: ["sales.id"],
       });
 
       return res.status(200).json(companySales);
-
     } catch (error) {
       return main.handleError(res, error);
     }
@@ -98,8 +96,8 @@ export default class SalesStats {
     try {
       const count = await db.Sale.count({
         where: {
-          editable: false
-        }
+          editable: false,
+        },
       });
       const year = new Date().getFullYear();
       const month = new Date().getMonth();
@@ -114,15 +112,14 @@ export default class SalesStats {
                   .format("YYYY-MM-DD"),
                 [Op.lt]: moment([month])
                   .endOf("month")
-                  .format("YYYY-MM-DD")
-              }
-            }
-          ]
-        }
+                  .format("YYYY-MM-DD"),
+              },
+            },
+          ],
+        },
       });
 
       return res.status(200).json({ count, previous: previousMonth });
-
     } catch (error) {
       return main.handleError(res, error);
     }
@@ -134,8 +131,8 @@ export default class SalesStats {
       const count = await db.Sale.count({
         where: {
           editable: false,
-          ...getByWeek(date)
-        }
+          ...getByWeek(date),
+        },
       });
       const lastWeekDate = moment(date)
         .subtract(1, "weeks")
@@ -144,12 +141,11 @@ export default class SalesStats {
       const previousWeek = await db.Sale.count({
         where: {
           editable: false,
-          ...getByWeek(lastWeekDate)
-        }
+          ...getByWeek(lastWeekDate),
+        },
       });
 
       return res.status(200).json({ count, previous: previousWeek });
-
     } catch (error) {
       return main.handleError(res, error);
     }
