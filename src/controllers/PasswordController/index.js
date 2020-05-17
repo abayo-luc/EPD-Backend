@@ -3,11 +3,13 @@ import { v4 as uuid } from "uuid";
 import main from "../main";
 import db from "../../models";
 import notifier from "../../utils/notifier";
+import { validatePassword, validatePhone } from "../../utils/validator";
 
 export default class PasswordController {
   static async getOneTimeCode(req, res) {
     try {
       const { phoneNumber } = req.body;
+      await validatePhone.validateAsync({ phoneNumber });
       const user = await db.User.findOne({
         where: {
           phoneNumber
@@ -26,6 +28,11 @@ export default class PasswordController {
       user.two_factor_secret = secret.base32;
       await user.save({ fields: ["two_factor_secret"] });
       const message = `Your EPD verification code is: ${code}`;
+
+      /**
+       * send code via sms only in production
+       */
+
       if (process.env.NODE_ENV === "production") {
         await notifier({ message, phoneNumber });
         return res
@@ -33,10 +40,6 @@ export default class PasswordController {
           .json({ message: `Password reset PIN sent to ${phoneNumber}` });
       }
       return res.status(200).json({ message });
-
-      /**
-       * send code via sms, and return token to be redirected to
-       */
     } catch (error) {
       return main.handleError(res, error);
     }
@@ -45,6 +48,7 @@ export default class PasswordController {
   static async getResetToken(req, res) {
     try {
       const { phoneNumber, code } = req.body;
+      await validatePhone.validateAsync({ phoneNumber });
       const user = await db.User.findOne({ where: { phoneNumber } });
 
       if (!user) {
@@ -78,6 +82,7 @@ export default class PasswordController {
   static async updatePassword(req, res) {
     try {
       const { password, passwordConfirmation } = req.body;
+      await validatePassword.validateAsync({ password, passwordConfirmation });
       const { token } = req.query;
       const user = await db.User.findOne({
         where: {
@@ -87,10 +92,6 @@ export default class PasswordController {
 
       if (!user) {
         return res.status(400).json({ message: "Invalid or expired link" });
-      }
-
-      if (password !== passwordConfirmation) {
-        return res.status(400).json({ message: "Passwords do not match" });
       }
 
       user.password = password;

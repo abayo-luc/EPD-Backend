@@ -79,3 +79,21 @@ export const validateSales = Joi.object({
   age: Joi.number().required(),
   editable: Joi.boolean()
 });
+
+export const validatePassword = Joi.object({
+  password: Joi.string()
+    .min(6)
+    .max(15)
+    .required(),
+  passwordConfirmation: Joi.string()
+    .valid(Joi.ref("password"))
+    .error(new Error("Passwords do not match"))
+    .required()
+});
+
+export const validatePhone = Joi.object({
+  phoneNumber: Joi.string()
+    .regex(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im)
+    .message("Invalid phone number")
+    .required()
+});
