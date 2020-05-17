@@ -15,7 +15,7 @@ module.exports = {
           confirmed: true,
           blocked: false,
           email: SUPER_ADMIN_EMAIL,
-          phoneNumber: "0780000000",
+          phoneNumber: "0789277275",
           password: CUSTOM_PASSWORD,
           role: "superAdmin",
           createdAt: new Date(),
@@ -35,7 +35,7 @@ module.exports = {
           updatedAt: new Date()
         },
         {
-          id: uuid(),
+          id: "10b5f343-efbd-45ce-85d0-7f694a91d34d",
           name: "Agent",
           username: "agent",
           confirmed: true,
@@ -45,6 +45,7 @@ module.exports = {
           password: CUSTOM_PASSWORD,
           role: "agent",
           createdAt: new Date(),
+          companyId: "53d8cfb2-b6a7-4e61-8088-ae278ef2e5e0",
           updatedAt: new Date()
         },
         {

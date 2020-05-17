@@ -52,6 +52,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         allowNull: false
       },
+      clientID: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
       userId: {
         type: DataTypes.UUID,
         allowNull: false
@@ -59,8 +63,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  Sale.associate = _models => {
-    // associations can be defined here
+  Sale.associate = models => {
+    Sale.belongsTo(models.User, {
+      foreignKey: "userId",
+      as: "user"
+    });
+    Sale.belongsTo(models.Company, {
+      foreignKey: "companyId",
+      as: "company"
+    });
   };
   return Sale;
 };

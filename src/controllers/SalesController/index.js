@@ -19,6 +19,22 @@ class SalesController {
             "village"
           ])
         },
+        include: [
+          {
+            model: db.User,
+            as: "user",
+            attributes: {
+              exclude: [
+                "password",
+                "role",
+                "companyId",
+                "two_factor_secret",
+                "password_reset_token"
+              ]
+            }
+          },
+          { model: db.Company, as: "company" }
+        ],
         order: [["updatedAt", "ASC"]],
         ...paginate({ page, limit })
       });
@@ -44,6 +60,22 @@ class SalesController {
             "village"
           ])
         },
+        include: [
+          {
+            model: db.User,
+            as: "user",
+            attributes: {
+              exclude: [
+                "password",
+                "role",
+                "companyId",
+                "two_factor_secret",
+                "password_reset_token"
+              ]
+            }
+          },
+          { model: db.Company, as: "company" }
+        ],
         order: [["updatedAt", "ASC"]],
         ...paginate({ page, limit })
       });
@@ -69,6 +101,22 @@ class SalesController {
             "village"
           ])
         },
+        include: [
+          {
+            model: db.User,
+            as: "user",
+            attributes: {
+              exclude: [
+                "password",
+                "role",
+                "companyId",
+                "two_factor_secret",
+                "password_reset_token"
+              ]
+            }
+          },
+          { model: db.Company, as: "company" }
+        ],
         order: [["updatedAt", "ASC"]],
         ...paginate({ page, limit })
       });

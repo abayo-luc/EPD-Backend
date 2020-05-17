@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import app from "./index";
 
 const PORT = process.env.PORT || 3000;

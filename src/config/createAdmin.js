@@ -27,13 +27,12 @@ const { argv } = yargs
 (async () => {
   try {
     const { password, username, phone, role = "admin" } = argv;
-    const user = await db.User.create({
+    await db.User.create({
       phoneNumber: phone,
       username,
       password,
       role: role || "admin"
     });
-    console.log(user);
   } catch (err) {
     const error = {};
     if (err.errors) {
@@ -53,7 +52,6 @@ const { argv } = yargs
     } else {
       error.message = err.message;
     }
-    console.log(error);
   } finally {
     process.exit();
   }

@@ -30,6 +30,22 @@ class AppToken {
       });
     });
   }
+
+  static async getJWT(payload) {
+    return new Promise((resolve, reject) =>
+      jwt.sign(
+        payload,
+        JWT_SECRET_KEY,
+        { algorithm: "HS256" },
+        (error, token) => {
+          if (token) {
+            resolve(token);
+          }
+          reject(error);
+        }
+      )
+    );
+  }
 }
 
 export default AppToken;
