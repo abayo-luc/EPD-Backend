@@ -15,7 +15,7 @@ module.exports = {
           confirmed: true,
           blocked: false,
           email: SUPER_ADMIN_EMAIL,
-          phoneNumber: "0780000000",
+          phoneNumber: "0789277275",
           password: CUSTOM_PASSWORD,
           role: "superAdmin",
           createdAt: new Date(),

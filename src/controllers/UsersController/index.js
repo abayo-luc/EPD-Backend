@@ -10,7 +10,7 @@ class UserController extends MainController {
       const { search, limit, page } = req.query;
       const data = await User.findAndCountAll({
         attributes: {
-          exclude: ["password"]
+          exclude: ["password", "two_factor_secret", "password_reset_token"]
         },
         where: {
           ...textSearch(search, ["name", "phoneNumber", "username"])
@@ -36,7 +36,7 @@ class UserController extends MainController {
       const { search, limit, page } = req.query;
       const data = await User.findAndCountAll({
         attributes: {
-          exclude: ["password"]
+          exclude: ["password", "two_factor_secret", "password_reset_token"]
         },
         where: {
           companyId,
@@ -93,7 +93,7 @@ class UserController extends MainController {
       if (req.user?.role === "supervisor") {
         data = await User.findOne({
           attributes: {
-            exclude: ["password"]
+            exclude: ["password", "two_factor_secret", "password_reset_token"]
           },
           where: {
             id,
@@ -103,7 +103,7 @@ class UserController extends MainController {
       } else {
         data = await User.findByPk(id, {
           attributes: {
-            exclude: ["password"]
+            exclude: ["password", "two_factor_secret", "password_reset_token"]
           }
         });
       }

@@ -24,7 +24,13 @@ class SalesController {
             model: db.User,
             as: "user",
             attributes: {
-              exclude: ["password", "role", "companyId"]
+              exclude: [
+                "password",
+                "role",
+                "companyId",
+                "two_factor_secret",
+                "password_reset_token"
+              ]
             }
           },
           { model: db.Company, as: "company" }
@@ -59,7 +65,13 @@ class SalesController {
             model: db.User,
             as: "user",
             attributes: {
-              exclude: ["password", "role", "companyId"]
+              exclude: [
+                "password",
+                "role",
+                "companyId",
+                "two_factor_secret",
+                "password_reset_token"
+              ]
             }
           },
           { model: db.Company, as: "company" }
@@ -94,7 +106,13 @@ class SalesController {
             model: db.User,
             as: "user",
             attributes: {
-              exclude: ["password", "role", "companyId"]
+              exclude: [
+                "password",
+                "role",
+                "companyId",
+                "two_factor_secret",
+                "password_reset_token"
+              ]
             }
           },
           { model: db.Company, as: "company" }

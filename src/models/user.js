@@ -79,7 +79,9 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true
       },
       address: DataTypes.STRING,
-      avatar: DataTypes.STRING
+      avatar: DataTypes.STRING,
+      two_factor_secret: DataTypes.STRING,
+      password_reset_token: DataTypes.STRING
     },
     {
       tableName: "Users"

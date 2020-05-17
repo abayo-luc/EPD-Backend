@@ -2,7 +2,8 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.addColumn("Sales", "clientID", {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: false,
+      defaultValue: ""
     });
   },
 
