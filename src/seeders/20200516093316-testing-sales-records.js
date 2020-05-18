@@ -17,7 +17,7 @@ module.exports = {
       clientID: faker.random.number(),
       companyId: "53d8cfb2-b6a7-4e61-8088-ae278ef2e5e0",
       userId: "10b5f343-efbd-45ce-85d0-7f694a91d34d",
-      createdAt: new Date(),
+      createdAt: faker.date.between("01/01/2019", "12/30/2019"),
       updatedAt: new Date()
     }));
     return queryInterface.bulkInsert("Sales", [...data], {});
