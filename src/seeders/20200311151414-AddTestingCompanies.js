@@ -11,8 +11,18 @@ module.exports = {
           phoneNumber: "0789277275",
           createdAt: new Date(),
           updatedAt: new Date()
+        },
+        {
+          id: "53d8cfb2-b6a7-4e61-8088-ae278ef2e5e6",
+          name: "ABC Inc",
+          email: "info@abc.com",
+          address: "KG 11 Av",
+          phoneNumber: "0789000000",
+          createdAt: new Date(),
+          updatedAt: new Date()
         }
       ],
+
       {}
     );
   },
