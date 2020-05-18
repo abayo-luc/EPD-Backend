@@ -62,7 +62,6 @@ export default class SalesStats {
         },
         { ...months }
       );
-
       return res.status(200).json(data);
     } catch (error) {
       return main.handleError(res, error);
@@ -72,6 +71,7 @@ export default class SalesStats {
   static async salesVsCompany(req, res) {
     try {
       const { year = new Date().getFullYear() } = req.query;
+
       const companySales = await db.Company.findAll({
         include: [
           {
@@ -85,7 +85,6 @@ export default class SalesStats {
         ],
         groupe: ["sales.id"],
       });
-
       return res.status(200).json(companySales);
     } catch (error) {
       return main.handleError(res, error);

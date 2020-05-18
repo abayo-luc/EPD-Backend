@@ -12,5 +12,8 @@ StatsRouter.get(
   .get("/statistics/total_sales", SalesStatsController.totalSales)
   .get("/statistics/total_companies", CompanyStatsController.totalCompanies)
   .get("/statistics/week_sales", SalesStatsController.weekSales);
+<<<<<<< HEAD
 
+=======
+>>>>>>> Add company stats
 export default StatsRouter;
