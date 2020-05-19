@@ -52,9 +52,8 @@ export default class PasswordController {
       const user = await db.User.findOne({ where: { phoneNumber } });
 
       if (!user) {
-        return res
-          .status(400)
-          .json({ message: "Invalid code or phone number" });
+        const error = { message: "Invalid code or phone number" };
+        return res.status(400).json({ error });
       }
 
       const isCodeValid = speakeasy.totp.verify({
@@ -65,9 +64,8 @@ export default class PasswordController {
       });
 
       if (!isCodeValid) {
-        return res
-          .status(400)
-          .json({ message: "Invalid code or phone number" });
+        const error = { message: "Invalid code or phone number" };
+        return res.status(400).json({ error });
       }
 
       const passwordResetToken = uuid(user.id);
@@ -91,7 +89,9 @@ export default class PasswordController {
       });
 
       if (!user) {
-        return res.status(400).json({ message: "Invalid or expired link" });
+        return res
+          .status(400)
+          .json({ error: { message: "Invalid or expired link" } });
       }
 
       user.password = password;
