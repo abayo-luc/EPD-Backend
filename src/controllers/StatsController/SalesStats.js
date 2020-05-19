@@ -62,7 +62,8 @@ export default class SalesStats {
         },
         { ...months }
       );
-      return res.status(200).json({ data });
+
+      return res.status(200).json(data);
     } catch (error) {
       return main.handleError(res, error);
     }
@@ -85,7 +86,9 @@ export default class SalesStats {
         ],
         groupe: ["sales.id"]
       });
-      return res.status(200).json({ data: companySales });
+
+      return res.status(200).json(companySales);
+
     } catch (error) {
       return main.handleError(res, error);
     }
@@ -117,7 +120,9 @@ export default class SalesStats {
           ]
         }
       });
-      return res.status(200).json({ data: { count, previousMonth } });
+
+      return res.status(200).json({ count, previous: previousMonth });
+
     } catch (error) {
       return main.handleError(res, error);
     }
@@ -142,7 +147,9 @@ export default class SalesStats {
           ...getByWeek(lastWeekDate)
         }
       });
-      return res.status(200).json({ data: { count, previousWeek } });
+
+      return res.status(200).json({ count, previous: previousWeek });
+
     } catch (error) {
       return main.handleError(res, error);
     }
