@@ -45,5 +45,10 @@ salesRouters
     "/companies/:companyId/users/:id/sales/:salesId",
     authorize.allow(["owner"]),
     SalesController.update
+  )
+  .delete(
+    "/companies/:companyId/users/:id/sales/:salesId",
+    authorize.allow(["owner"]),
+    SalesController.delete
   );
 export default salesRouters;

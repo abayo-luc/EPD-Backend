@@ -77,9 +77,29 @@ export const validateSales = Joi.object({
   companyId: Joi.string().required(),
   sex: Joi.string().valid("male", "female"),
   age: Joi.number().required(),
-  editable: Joi.boolean()
+  editable: Joi.boolean(),
+  clientID: Joi.string()
+    .min(16)
+    .max(16)
 });
-
+export const validateSalesUpdate = Joi.object({
+  clientName: Joi.string(),
+  phoneNumber: Joi.string()
+    .regex(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im)
+    .message("Invalid phone number"),
+  province: Joi.string(),
+  district: Joi.string(),
+  sector: Joi.string(),
+  cell: Joi.string(),
+  village: Joi.string(),
+  companyId: Joi.string(),
+  sex: Joi.string().valid("male", "female"),
+  age: Joi.number(),
+  editable: Joi.boolean(),
+  clientID: Joi.string()
+    .min(16)
+    .max(16)
+});
 export const validatePassword = Joi.object({
   password: Joi.string()
     .min(6)

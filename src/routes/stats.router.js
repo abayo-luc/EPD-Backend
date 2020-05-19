@@ -12,4 +12,5 @@ StatsRouter.get(
   .get("/statistics/total_sales", SalesStatsController.totalSales)
   .get("/statistics/total_companies", CompanyStatsController.totalCompanies)
   .get("/statistics/week_sales", SalesStatsController.weekSales);
+
 export default StatsRouter;

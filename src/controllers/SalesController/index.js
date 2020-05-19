@@ -1,6 +1,6 @@
 import MainController from "../main";
 import db from "../../models";
-import { validateSales } from "../../utils/validator";
+import { validateSales, validateSalesUpdate } from "../../utils/validator";
 import { paginate, textSearch } from "../../utils/queryHelper";
 
 const { Sale } = db;
@@ -35,7 +35,7 @@ class SalesController {
           },
           { model: db.Company, as: "company" }
         ],
-        order: [["updatedAt", "ASC"]],
+
         ...paginate({ page, limit })
       });
       return res.status(200).json({ data });
@@ -76,7 +76,7 @@ class SalesController {
           },
           { model: db.Company, as: "company" }
         ],
-        order: [["updatedAt", "ASC"]],
+
         ...paginate({ page, limit })
       });
       return res.status(200).json({ data });
@@ -91,7 +91,7 @@ class SalesController {
       const data = await Sale.findAndCountAll({
         where: {
           userId: req.params?.id,
-          editable: type.toLowerCase() === "editable",
+          editable: type.toLowerCase().trim() === "editable",
           ...textSearch(search, [
             "clientName",
             "province",
@@ -117,7 +117,6 @@ class SalesController {
           },
           { model: db.Company, as: "company" }
         ],
-        order: [["updatedAt", "ASC"]],
         ...paginate({ page, limit })
       });
       return res.status(200).json({ data });
@@ -154,12 +153,7 @@ class SalesController {
   static async update(req, res) {
     try {
       const { id, salesId } = req.params;
-      const record = await Sale.findByPk(salesId || id);
-      if (!record) {
-        return MainController.handleFind(res);
-      }
-      const fields = [];
-      [
+      const attributes = [
         "clientName",
         "phoneNumber",
         "province",
@@ -168,13 +162,51 @@ class SalesController {
         "cell",
         "village",
         "age",
-        "sex"
-      ].forEach(item => {
+        "clientID",
+        "sex",
+        "editable"
+      ];
+      await validateSalesUpdate.validateAsync(
+        attributes.reduce(
+          (prev, current) => ({
+            ...prev,
+            [current]: req.body[current]
+          }),
+          {}
+        ),
+        { abortEarly: false }
+      );
+      const record = await Sale.findByPk(salesId || id);
+      if (!record) {
+        return MainController.handleFind(res);
+      }
+      const fields = [];
+      attributes.forEach(item => {
         if (req.body[item]) record[item] = req.body[item];
         if (req.body[item]) fields.push(item);
       });
+
       const data = await record.save({ fields });
       return res.status(200).json({ data });
+    } catch (error) {
+      return MainController.handleError(res, error);
+    }
+  }
+
+  static async delete(req, res) {
+    try {
+      const { id, salesId } = req.params;
+      const record = await Sale.find({
+        where: {
+          id: salesId || id,
+          editable: true
+        }
+      });
+      if (!record) {
+        return MainController.handleFind(res);
+      }
+      await record.destroy();
+      return res.status(204).json({ message: "Success" });
     } catch (error) {
       return MainController.handleError(res, error);
     }
