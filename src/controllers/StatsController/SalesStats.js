@@ -10,7 +10,7 @@ const months = moment
     {}
   );
 
-const getByYear = (year) => ({
+const getByYear = year => ({
   $and: [
     {
       createdAt: {
@@ -19,36 +19,42 @@ const getByYear = (year) => ({
           .format("YYYY-MM-DD"),
         [Op.lt]: moment([year])
           .endOf("year")
-          .format("YYYY-MM-DD"),
-      },
-    },
-  ],
+          .format("YYYY-MM-DD")
+      }
+    }
+  ]
 });
 
-const getByWeek = (week) => ({
+const getByWeek = week => ({
   $and: [
     {
       createdAt: {
         [Op.gte]: moment(week)
-          .startOf("week")
+          .startOf("isoWeek")
           .format("YYYY-MM-DD"),
         [Op.lt]: moment(week)
-          .endOf("week")
-          .format("YYYY-MM-DD"),
-      },
-    },
-  ],
+          .endOf("isoWeek")
+          .format("YYYY-MM-DD")
+      }
+    }
+  ]
 });
 
 export default class SalesStats {
   static async salesVsMonths(req, res) {
     try {
+      const filters = {
+        editable: false
+      };
+      if (req.user.role === "supervisor") {
+        filters.companyId = req.user.companyId;
+      }
       const { year = new Date().getFullYear() } = req.query;
       const sales = await db.Sale.findAll({
         where: {
           ...getByYear(year),
-          editable: false,
-        },
+          ...filters
+        }
       });
       const data = sales.reduce(
         (prevValue, currentValue) => {
@@ -57,7 +63,7 @@ export default class SalesStats {
             ?.toLowerCase();
           return {
             ...prevValue,
-            [currentMonth]: [currentValue, ...prevValue[currentMonth]],
+            [currentMonth]: [currentValue, ...prevValue[currentMonth]]
           };
         },
         { ...months }
@@ -79,11 +85,11 @@ export default class SalesStats {
             as: "sales",
             where: {
               ...getByYear(year),
-              editable: false,
-            },
-          },
+              editable: false
+            }
+          }
         ],
-        groupe: ["sales.id"],
+        groupe: ["sales.id"]
       });
       return res.status(200).json(companySales);
     } catch (error) {
@@ -91,31 +97,63 @@ export default class SalesStats {
     }
   }
 
-  static async totalSales(_req, res) {
+  static async salesVsAgents(req, res) {
     try {
+      const { year = new Date().getFullYear() } = req.query;
+
+      const agentsSales = await db.User.findAll({
+        where: {
+          companyId: req.user.companyId,
+          role: "agent"
+        },
+        attributes: ["id", "name", "avatar"],
+        include: [
+          {
+            model: db.Sale,
+            as: "sales",
+            attributes: ["id"],
+            where: {
+              ...getByYear(year),
+              editable: false
+            }
+          }
+        ],
+        groupe: ["sales.id"]
+      });
+      return res.status(200).json(agentsSales);
+    } catch (error) {
+      return main.handleError(res, error);
+    }
+  }
+
+  static async totalSales(req, res) {
+    try {
+      const filters = {
+        editable: false
+      };
+      if (req.user.role === "supervisor") {
+        filters.companyId = req.user.companyId;
+      }
       const count = await db.Sale.count({
         where: {
-          editable: false,
-        },
+          ...filters
+        }
       });
-      const year = new Date().getFullYear();
-      const month = new Date().getMonth();
+
       const previousMonth = await db.Sale.count({
         where: {
-          editable: false,
+          ...filters,
           $and: [
             {
               createdAt: {
-                [Op.gte]: moment([year])
-                  .startOf("year")
-                  .format("YYYY-MM-DD"),
-                [Op.lt]: moment([month])
-                  .endOf("month")
-                  .format("YYYY-MM-DD"),
-              },
-            },
-          ],
-        },
+                [Op.lt]: moment()
+                  .startOf("month")
+                  .subtract(1, "day")
+                  .format("YYYY-MM-DD")
+              }
+            }
+          ]
+        }
       });
 
       return res.status(200).json({ count, previous: previousMonth });
@@ -124,27 +162,71 @@ export default class SalesStats {
     }
   }
 
-  static async weekSales(req, res) {
+  static async totalDrafts(req, res) {
     try {
-      const { date = new Date() } = req.query;
+      const filters = {
+        editable: true
+      };
+      if (req.user.role === "supervisor") {
+        filters.companyId = req.user.companyId;
+      }
       const count = await db.Sale.count({
         where: {
-          editable: false,
-          ...getByWeek(date),
-        },
+          ...filters
+        }
+      });
+      return res.status(200).json({ count });
+    } catch (error) {
+      return main.handleError(res, error);
+    }
+  }
+
+  static async weekSales(req, res) {
+    try {
+      const filters = {
+        editable: false
+      };
+      if (req.user.role === "supervisor") {
+        filters.companyId = req.user.companyId;
+      }
+      const { date = new Date().toISOString() } = req.query;
+      const count = await db.Sale.count({
+        where: {
+          ...filters,
+          ...getByWeek(date)
+        }
       });
       const lastWeekDate = moment(date)
         .subtract(1, "weeks")
-        .endOf("week");
+        .endOf("isoWeek");
 
       const previousWeek = await db.Sale.count({
         where: {
-          editable: false,
-          ...getByWeek(lastWeekDate),
-        },
+          ...filters,
+          ...getByWeek(lastWeekDate)
+        }
       });
 
       return res.status(200).json({ count, previous: previousWeek });
+    } catch (error) {
+      return main.handleError(res, error);
+    }
+  }
+
+  static async totalAgents(req, res) {
+    try {
+      const filters = {
+        role: "agent"
+      };
+      if (req.user.role === "supervisor") {
+        filters.companyId = req.user.companyId;
+      }
+      const count = await db.User.count({
+        where: {
+          ...filters
+        }
+      });
+      return res.status(200).json({ count });
     } catch (error) {
       return main.handleError(res, error);
     }
