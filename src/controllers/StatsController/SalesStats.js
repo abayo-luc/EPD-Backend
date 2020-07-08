@@ -3,12 +3,17 @@ import moment from "moment";
 import main from "../main";
 import db from "../../models";
 
-const months = moment
-  .months()
-  .reduce(
-    (prev, current) => ({ ...prev, [current.toLocaleLowerCase()]: [] }),
-    {}
-  );
+const monthsBetween = async (start, end) => {
+  const dateStart = moment(start);
+  const dateEnd = moment(end);
+  const timeValues = [];
+
+  while (dateEnd > dateStart || dateStart.format("M") === dateEnd.format("M")) {
+    timeValues.push(dateStart.format("MMM-YY"));
+    dateStart.add(1, "month");
+  }
+  return timeValues.reduce((prev, current) => ({ ...prev, [current]: [] }), {});
+};
 
 const getByRange = ({ start, end }) => ({
   $and: [
@@ -39,27 +44,38 @@ const getByWeek = week => ({
 export default class SalesStats {
   static async salesVsMonths(req, res) {
     try {
+      const {
+        start = moment().startOf("year"),
+        end = moment(),
+        companyId
+      } = req.query;
       const filters = {
         editable: false
       };
+
       if (req.user.role === "supervisor") {
         filters.companyId = req.user.companyId;
+      } else if (companyId) {
+        filters.companyId = companyId;
       }
-      const { start = moment().startOf("year"), end = moment() } = req.query;
       const sales = await db.Sale.findAll({
         where: {
           ...getByRange({ start, end }),
           ...filters
         }
       });
+
+      const months = await monthsBetween(start, end); // populate empty months
+
       const data = sales.reduce(
         (prevValue, currentValue) => {
-          const currentMonth = new Date(currentValue.createdAt)
-            .toLocaleString("default", { month: "long" })
-            ?.toLowerCase();
+          const currentMonth = moment(currentValue.createdAt).format("MMM-YY");
           return {
             ...prevValue,
-            [currentMonth]: [currentValue, ...prevValue[currentMonth]]
+            [currentMonth]: [
+              currentValue,
+              ...(prevValue[currentMonth] ? prevValue[currentMonth] : [])
+            ]
           };
         },
         { ...months }
@@ -94,11 +110,15 @@ export default class SalesStats {
 
   static async salesVsAgents(req, res) {
     try {
-      const { start = moment().startOf("year"), end = moment() } = req.query;
+      const {
+        start = moment().startOf("year"),
+        end = moment(),
+        companyId
+      } = req.query;
 
       const agentsSales = await db.User.findAll({
         where: {
-          companyId: req.user.companyId,
+          companyId: companyId || req.user.companyId,
           role: "agent"
         },
         attributes: ["id", "name", "avatar"],
@@ -123,7 +143,7 @@ export default class SalesStats {
 
   static async totalSales(req, res) {
     try {
-      const { start, end } = req.query;
+      const { start, end, companyId } = req.query;
       let filters = {
         editable: false
       };
@@ -133,32 +153,20 @@ export default class SalesStats {
           ...getByRange({ start, end })
         };
       }
+
       if (req.user.role === "supervisor") {
         filters.companyId = req.user.companyId;
+      } else if (companyId) {
+        filters.companyId = companyId;
       }
+
       const count = await db.Sale.count({
         where: {
           ...filters
         }
       });
 
-      const previousMonth = await db.Sale.count({
-        where: {
-          ...filters,
-          $and: [
-            {
-              createdAt: {
-                [Op.lt]: moment()
-                  .startOf("month")
-                  .subtract(1, "day")
-                  .format("YYYY-MM-DD")
-              }
-            }
-          ]
-        }
-      });
-
-      return res.status(200).json({ count, previous: previousMonth });
+      return res.status(200).json({ count });
     } catch (error) {
       return main.handleError(res, error);
     }
@@ -166,11 +174,14 @@ export default class SalesStats {
 
   static async totalDrafts(req, res) {
     try {
+      const { companyId } = req.query;
       const filters = {
         editable: true
       };
       if (req.user.role === "supervisor") {
         filters.companyId = req.user.companyId;
+      } else if (companyId) {
+        filters.companyId = companyId;
       }
       const count = await db.Sale.count({
         where: {
@@ -185,11 +196,14 @@ export default class SalesStats {
 
   static async weekSales(req, res) {
     try {
+      const { companyId } = req.query;
       const filters = {
         editable: false
       };
       if (req.user.role === "supervisor") {
         filters.companyId = req.user.companyId;
+      } else if (companyId) {
+        filters.companyId = companyId;
       }
       const { date = new Date().toISOString() } = req.query;
       const count = await db.Sale.count({
@@ -198,9 +212,7 @@ export default class SalesStats {
           ...getByWeek(date)
         }
       });
-      const lastWeekDate = moment(date)
-        .subtract(1, "weeks")
-        .endOf("isoWeek");
+      const lastWeekDate = moment(date).subtract(1, "weeks");
 
       const previousWeek = await db.Sale.count({
         where: {
@@ -217,7 +229,7 @@ export default class SalesStats {
 
   static async totalAgents(req, res) {
     try {
-      const { start, end } = req.query;
+      const { start, end, companyId } = req.query;
       let filters = {
         role: "agent"
       };
@@ -229,6 +241,8 @@ export default class SalesStats {
       }
       if (req.user.role === "supervisor") {
         filters.companyId = req.user.companyId;
+      } else if (companyId) {
+        filters.companyId = companyId;
       }
 
       const count = await db.User.count({
