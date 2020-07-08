@@ -10,16 +10,12 @@ const months = moment
     {}
   );
 
-const getByYear = year => ({
+const getByRange = ({ start, end }) => ({
   $and: [
     {
       createdAt: {
-        [Op.gte]: moment([year])
-          .startOf("year")
-          .format("YYYY-MM-DD"),
-        [Op.lt]: moment([year])
-          .endOf("year")
-          .format("YYYY-MM-DD")
+        [Op.gte]: moment(start).format("YYYY-MM-DD"),
+        [Op.lt]: moment(end).format("YYYY-MM-DD")
       }
     }
   ]
@@ -49,10 +45,10 @@ export default class SalesStats {
       if (req.user.role === "supervisor") {
         filters.companyId = req.user.companyId;
       }
-      const { year = new Date().getFullYear() } = req.query;
+      const { start = moment().startOf("year"), end = moment() } = req.query;
       const sales = await db.Sale.findAll({
         where: {
-          ...getByYear(year),
+          ...getByRange({ start, end }),
           ...filters
         }
       });
@@ -76,15 +72,14 @@ export default class SalesStats {
 
   static async salesVsCompany(req, res) {
     try {
-      const { year = new Date().getFullYear() } = req.query;
-
+      const { start = moment().startOf("year"), end = moment() } = req.query;
       const companySales = await db.Company.findAll({
         include: [
           {
             model: db.Sale,
             as: "sales",
             where: {
-              ...getByYear(year),
+              ...getByRange({ start, end }),
               editable: false
             }
           }
@@ -99,7 +94,7 @@ export default class SalesStats {
 
   static async salesVsAgents(req, res) {
     try {
-      const { year = new Date().getFullYear() } = req.query;
+      const { start = moment().startOf("year"), end = moment() } = req.query;
 
       const agentsSales = await db.User.findAll({
         where: {
@@ -113,7 +108,7 @@ export default class SalesStats {
             as: "sales",
             attributes: ["id"],
             where: {
-              ...getByYear(year),
+              ...getByRange({ start, end }),
               editable: false
             }
           }
@@ -128,9 +123,16 @@ export default class SalesStats {
 
   static async totalSales(req, res) {
     try {
-      const filters = {
+      const { start, end } = req.query;
+      let filters = {
         editable: false
       };
+      if (start && end) {
+        filters = {
+          ...filters,
+          ...getByRange({ start, end })
+        };
+      }
       if (req.user.role === "supervisor") {
         filters.companyId = req.user.companyId;
       }
@@ -215,12 +217,20 @@ export default class SalesStats {
 
   static async totalAgents(req, res) {
     try {
-      const filters = {
+      const { start, end } = req.query;
+      let filters = {
         role: "agent"
       };
+      if (start && end) {
+        filters = {
+          ...filters,
+          ...getByRange({ start, end })
+        };
+      }
       if (req.user.role === "supervisor") {
         filters.companyId = req.user.companyId;
       }
+
       const count = await db.User.count({
         where: {
           ...filters
