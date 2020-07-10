@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import MainController from "../main";
 import db from "../../models";
 import { validateSales, validateSalesUpdate } from "../../utils/validator";
@@ -7,7 +8,15 @@ const { Sale } = db;
 class SalesController {
   static async index(req, res) {
     try {
-      const { search, page = 1, limit = 15 } = req.query;
+      const { search, page = 1, limit = 15, companyId } = req.query;
+      let otherFilters = {};
+      if (companyId) {
+        otherFilters = {
+          [Op.and]: {
+            companyId
+          }
+        };
+      }
       const data = await Sale.findAndCountAll({
         where: {
           ...textSearch(search, [
@@ -17,7 +26,8 @@ class SalesController {
             "sector",
             "cell",
             "village"
-          ])
+          ]),
+          ...otherFilters
         },
         include: [
           {
