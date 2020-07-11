@@ -5,6 +5,27 @@ import { validateSales, validateSalesUpdate } from "../../utils/validator";
 import { paginate, textSearch } from "../../utils/queryHelper";
 
 const { Sale } = db;
+const salesOrder = [
+  ["updatedAt", "DESC"],
+  ["clientName", "ASC"]
+];
+const salesAssociatedData = [
+  {
+    model: db.User,
+    as: "user",
+    attributes: {
+      exclude: [
+        "password",
+        "role",
+        "companyId",
+        "two_factor_secret",
+        "password_reset_token"
+      ]
+    }
+  },
+  { model: db.Company, as: "company" },
+  { model: db.SoldItems, as: "items" }
+];
 class SalesController {
   static async index(req, res) {
     try {
@@ -29,22 +50,8 @@ class SalesController {
           ]),
           ...otherFilters
         },
-        include: [
-          {
-            model: db.User,
-            as: "user",
-            attributes: {
-              exclude: [
-                "password",
-                "role",
-                "companyId",
-                "two_factor_secret",
-                "password_reset_token"
-              ]
-            }
-          },
-          { model: db.Company, as: "company" }
-        ],
+        include: salesAssociatedData,
+        order: salesOrder,
 
         ...paginate({ page, limit })
       });
@@ -70,22 +77,8 @@ class SalesController {
             "village"
           ])
         },
-        include: [
-          {
-            model: db.User,
-            as: "user",
-            attributes: {
-              exclude: [
-                "password",
-                "role",
-                "companyId",
-                "two_factor_secret",
-                "password_reset_token"
-              ]
-            }
-          },
-          { model: db.Company, as: "company" }
-        ],
+        include: salesAssociatedData,
+        order: salesOrder,
 
         ...paginate({ page, limit })
       });
@@ -111,22 +104,8 @@ class SalesController {
             "village"
           ])
         },
-        include: [
-          {
-            model: db.User,
-            as: "user",
-            attributes: {
-              exclude: [
-                "password",
-                "role",
-                "companyId",
-                "two_factor_secret",
-                "password_reset_token"
-              ]
-            }
-          },
-          { model: db.Company, as: "company" }
-        ],
+        include: salesAssociatedData,
+        order: salesOrder,
         ...paginate({ page, limit })
       });
       return res.status(200).json({ data });
@@ -139,11 +118,20 @@ class SalesController {
     try {
       const { companyId } = req.params;
       await validateSales.validateAsync({ ...req.body, companyId });
-      const data = await Sale.create({
-        ...req.body,
-        userId: req.user.id,
-        companyId
-      });
+      const data = await Sale.create(
+        {
+          ...req.body,
+          userId: req.user.id,
+          companyId,
+          items: req.body.items.map(item => ({
+            ...item,
+            userId: req.user.id
+          }))
+        },
+        {
+          include: [{ model: db.SoldItems, as: "items" }]
+        }
+      );
       return res.status(201).json({ data });
     } catch (error) {
       return MainController.handleError(res, error);
@@ -173,8 +161,7 @@ class SalesController {
         "village",
         "age",
         "clientID",
-        "sex",
-        "editable"
+        "sex"
       ];
       await validateSalesUpdate.validateAsync(
         attributes.reduce(

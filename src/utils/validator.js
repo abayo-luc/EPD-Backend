@@ -80,7 +80,16 @@ export const validateSales = Joi.object({
   editable: Joi.boolean(),
   clientID: Joi.string()
     .min(16)
-    .max(16)
+    .max(16),
+  items: Joi.array()
+    .items({
+      name: Joi.string().required(),
+      price: Joi.number().required(),
+      quantity: Joi.number().required(),
+      description: Joi.string()
+    })
+    .min(1)
+    .required()
 });
 export const validateSalesUpdate = Joi.object({
   clientName: Joi.string(),
