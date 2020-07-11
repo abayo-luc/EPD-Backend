@@ -8,7 +8,7 @@ module.exports = {
           name: "123 Inc.",
           email: "info@123inc.com",
           address: "KG 11 Av",
-          phoneNumber: "0789277275",
+          phoneNumber: "0780000076",
           createdAt: new Date(),
           updatedAt: new Date()
         },
