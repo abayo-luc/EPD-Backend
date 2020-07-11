@@ -161,8 +161,7 @@ class SalesController {
         "village",
         "age",
         "clientID",
-        "sex",
-        "editable"
+        "sex"
       ];
       await validateSalesUpdate.validateAsync(
         attributes.reduce(
