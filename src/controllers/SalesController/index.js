@@ -63,8 +63,16 @@ class SalesController {
 
   static async companySales(req, res) {
     try {
-      const { search, page = 1, limit = 15 } = req.query;
+      const { search, page = 1, limit = 15, agentId: userId } = req.query;
       const { companyId } = req.params;
+      let otherFilters = {};
+      if (userId) {
+        otherFilters = {
+          [Op.and]: {
+            userId
+          }
+        };
+      }
       const data = await Sale.findAndCountAll({
         where: {
           companyId,
@@ -75,7 +83,8 @@ class SalesController {
             "sector",
             "cell",
             "village"
-          ])
+          ]),
+          ...otherFilters
         },
         include: salesAssociatedData,
         order: salesOrder,
@@ -117,7 +126,10 @@ class SalesController {
   static async create(req, res) {
     try {
       const { companyId } = req.params;
-      await validateSales.validateAsync({ ...req.body, companyId });
+      await validateSales.validateAsync(
+        { ...req.body, companyId },
+        { abortEarly: false }
+      );
       const data = await Sale.create(
         {
           ...req.body,
@@ -161,8 +173,10 @@ class SalesController {
         "village",
         "age",
         "clientID",
-        "sex"
+        "sex",
+        "editable"
       ];
+
       await validateSalesUpdate.validateAsync(
         attributes.reduce(
           (prev, current) => ({
@@ -179,8 +193,10 @@ class SalesController {
       }
       const fields = [];
       attributes.forEach(item => {
-        if (req.body[item]) record[item] = req.body[item];
-        if (req.body[item]) fields.push(item);
+        if (Object.keys(req.body).includes(item)) {
+          record[item] = req.body[item];
+          fields.push(item);
+        }
       });
 
       const data = await record.save({ fields });
