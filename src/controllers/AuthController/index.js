@@ -36,7 +36,13 @@ class AuthController {
       const data = await User.findByPk(id, {
         attributes: {
           exclude: ["password", "two_factor_secret", "password_reset_token"]
-        }
+        },
+        include: [
+          {
+            model: db.Company,
+            as: "company"
+          }
+        ]
       });
       return MainController.handleFind(res, data);
     } catch (error) {
