@@ -126,3 +126,18 @@ export const validatePhone = Joi.object({
     .message("Invalid phone number")
     .required()
 });
+
+export const validatePasswordUpdate = Joi.object({
+  password: Joi.string().required(),
+  newPassword: Joi.string()
+    .min(6)
+    .max(15)
+    .required()
+});
+
+export const validateItem = Joi.object({
+  name: Joi.string(),
+  price: Joi.number(),
+  quantity: Joi.number(),
+  description: Joi.string()
+});

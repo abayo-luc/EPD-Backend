@@ -40,6 +40,7 @@ class SalesController {
       }
       const data = await Sale.findAndCountAll({
         where: {
+          editable: false,
           ...textSearch(search, [
             "clientName",
             "province",
@@ -76,6 +77,7 @@ class SalesController {
       const data = await Sale.findAndCountAll({
         where: {
           companyId,
+          editable: false,
           ...textSearch(search, [
             "clientName",
             "province",
@@ -220,6 +222,20 @@ class SalesController {
       }
       await record.destroy();
       return res.status(204).json({ message: "Success" });
+    } catch (error) {
+      return MainController.handleError(res, error);
+    }
+  }
+
+  static async revertSales(req, res) {
+    try {
+      const { id } = req.params;
+      const record = await Sale.findByPk(id);
+      if (!record) return MainController.handleFind(res);
+      record.editable = true;
+      await record.save({ fields: ["editable"] });
+      console.log(record.editable, ">>>>>>>>>>>>");
+      return res.status(200).json({ data: record });
     } catch (error) {
       return MainController.handleError(res, error);
     }

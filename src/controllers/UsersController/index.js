@@ -1,6 +1,11 @@
+import bcrypt from "bcrypt";
 import MainController from "../main";
 import db from "../../models";
-import { signUpValidator, userUpdateValidator } from "../../utils/validator";
+import {
+  signUpValidator,
+  userUpdateValidator,
+  validatePasswordUpdate
+} from "../../utils/validator";
 import { textSearch, paginate } from "../../utils/queryHelper";
 
 const { User, Company } = db;
@@ -118,7 +123,7 @@ class UserController extends MainController {
     try {
       const fields = [];
       const { id } = req.params;
-      await userUpdateValidator.validateAsync(req.body);
+      await userUpdateValidator.validateAsync(req.body, { abortEarly: false });
       const user = await User.findByPk(id);
       if (!user) {
         return MainController.handleFind(res);
@@ -140,12 +145,22 @@ class UserController extends MainController {
   static async updatePassword(req, res) {
     try {
       const { id } = req.params;
-      const { password } = req.body;
+      const { password, newPassword } = req.body;
+      await validatePasswordUpdate.validateAsync(
+        { password, newPassword },
+        {
+          abortEarly: false
+        }
+      );
       const user = await User.findByPk(id);
       if (!user) {
         return MainController.handleFind(res);
       }
-      user.password = password;
+      if (user.id === req.user.id) {
+        const isMatch = bcrypt.compareSync(password, user.password);
+        if (!isMatch) throw new Error("Invalid password");
+      }
+      user.password = newPassword;
       await user.save({ fields: ["password"] });
       return res.status(200).json({
         data: {
