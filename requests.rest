@@ -1,0 +1,158 @@
+@BASE_URL = {{$dotenv BASE_URL}}
+@TOKEN = {{$dotenv TEST_TOKEN_JWT}}
+@ADMIN_TOKEN = {{$dotenv SUPER_ADMIN_TOKEN}}
+@SUPERVISOR_TOKEN = {{$dotenv SUPERVISOR_TOKEN}}
+@COMPANY_ID = 53d8cfb2-b6a7-4e61-8088-ae278ef2e5e0
+### /users
+GET {{BASE_URL}}/users?limit=3
+Content-Type: application/json
+Authorization: Bearer {{ADMIN_TOKEN}}
+###
+GET {{BASE_URL}}/companies/{{COMPANY_ID}}/users
+Content-Type: application/json
+Authorization: Bearer {{ADMIN_TOKEN}}
+###
+POST {{BASE_URL}}/users
+Content-Type: application/json
+Authorization: Bearer {{ADMIN_TOKEN}}
+
+{
+    "username":"abayo34",
+    "password":"password",
+    "phoneNumber":"0789277289"
+}
+###
+GET {{BASE_URL}}/users/c871ed80-524f-4753-b1af-57ca85f9c165
+Content-Type: application/json
+Authorization: Bearer {{ADMIN_TOKEN}}
+###
+PUT {{BASE_URL}}/users/c871ed80-524f-4753-b1af-57ca85f9c165
+Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
+
+{
+    "name":"Luc Abayo",
+    "username":"abayo_luc",
+    "email":"luc.bayo@gmail.com"
+}
+
+###
+
+PUT {{BASE_URL}}/users/c871ed80-524f-4753-b1af-57ca85f9c165/passwords
+Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
+
+{
+    "password":"password"
+}
+
+
+### autnetication
+
+POST {{BASE_URL}}/authentication/sign-in
+Content-Type: application/json
+
+{
+    "phoneNumber":"0780000000",
+    "password":"password"
+}
+
+###
+GET {{BASE_URL}}/authentication/current
+Content-Type: application/json
+Authorization: Bearer {{SUPERVISOR_TOKEN}}
+
+
+### Company Routers
+
+GET {{BASE_URL}}/companies
+Content-Type: application/json
+Authorization: Bearer {{ADMIN_TOKEN}}
+
+###
+POST {{BASE_URL}}/companies
+Content-Type: application/json
+Authorization: Bearer {{ADMIN_TOKEN}}
+
+{
+    "name":"Luc LTD",
+    "email":"info@luc.me",
+    "address":"KG 11 Av",
+    "phoneNumber":"0722131487"
+}
+
+###
+GET {{BASE_URL}}/companies/a4ec5b44-8bae-40a8-8c90-d194d8b8a790
+Content-Type: application/json
+Authorization: Bearer {{SUPERVISOR_TOKEN}}
+
+
+###
+PUT {{BASE_URL}}/companies/53d8cfb2-b6a7-4e61-8088-ae278ef2e5e0
+Content-Type: application/json
+Authorization: Bearer {{SUPERVISOR_TOKEN}}
+
+{
+    "name":"EDP Ltd",
+    "email":"info@edp.com",
+    "address":"GG 11 St",
+    "phoneNumber":"0789866365"
+}
+###
+DELETE {{BASE_URL}}/companies/6faa1986-d9c9-42ab-a40e-477c1124581f
+Content-Type: application/json
+Authorization: Bearer {{SUPERVISOR_TOKEN}}
+
+
+### Sales record
+
+GET {{BASE_URL}}/sales
+Content-Type: application/json
+Authorization: Bearer {{ADMIN_TOKEN}}
+
+###
+POST {{BASE_URL}}/companies/{{COMPANY_ID}}/sales
+Content-Type: application/json
+Authorization: Bearer {{SUPERVISOR_TOKEN}}
+
+{
+    "clientName":"Manzi Abayo",
+    "phoneNumber":"0789277275",
+    "province":"Kigali City",
+    "district":"Gasabo",
+    "sector":"Kimironko",
+    "cell":"Bibare",
+    "village":"Ingenzi",
+    "sex":"male",
+    "age":45
+}
+### get company sales
+GET {{BASE_URL}}/companies/{{COMPANY_ID}}/sales
+Content-Type: application/json
+Authorization: Bearer {{SUPERVISOR_TOKEN}}
+### get agent sales
+GET {{BASE_URL}}/companies/{{COMPANY_ID}}/users/c871ed80-524f-4753-b1af-57ca85f9c165/sales
+Content-Type: application/json
+Authorization: Bearer {{SUPERVISOR_TOKEN}}
+###
+
+PUT {{BASE_URL}}/companies/{{COMPANY_ID}}/sales/b501df6b-f16c-47d3-a073-db4897241dc1
+Content-Type: application/json
+Authorization: Bearer {{SUPERVISOR_TOKEN}}
+
+{
+    "clientName":"Fab Nkaka",
+    "phoneNumber":"0789277289",
+    "province":"Kigali City",
+    "district":"Gs",
+    "sector":"Km",
+    "cell":"Bib",
+    "village":"Igz",
+    "sex":"female",
+    "age":30
+}
+
+###
+GET {{BASE_URL}}/companies/{{COMPANY_ID}}/sales/b501df6b-f16c-47d3-a073-db4897241dc1
+Content-Type: application/json
+Authorization: Bearer {{SUPERVISOR_TOKEN}}
