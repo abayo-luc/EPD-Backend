@@ -1,5 +1,8 @@
+require('@babel/register');
+require('@babel/polyfill');
 const path = require('path');
-const homePath = process.env.NODE_ENV === 'product' ? 'dist' : 'src';
+const homePath = process.env.NODE_ENV === 'production' ? 'dist' : 'src';
+
 module.exports = {
 	config: path.resolve(`./${homePath}/config`, 'config.js'),
 	'models-path': path.resolve(`./${homePath}`, 'models'),
