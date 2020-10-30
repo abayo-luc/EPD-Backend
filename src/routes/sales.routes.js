@@ -50,5 +50,10 @@ salesRouters
     "/companies/:companyId/users/:id/sales/:salesId",
     authorize.allow(["owner"]),
     SalesController.delete
+  )
+  .put(
+    "/companies/:companyId/sales/:id/reverts",
+    authorize.allow(["supervisor", "admin"]),
+    SalesController.revertSales
   );
 export default salesRouters;

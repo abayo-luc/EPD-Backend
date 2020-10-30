@@ -25,7 +25,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.8.7",
     "@hapi/joi": "^17.1.0",
-    "bcrypt": "^4.0.1",
+    "bcrypt": "^5.0.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
@@ -33,7 +33,7 @@
     "joi-phone-number": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "moment": "^2.25.3",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
