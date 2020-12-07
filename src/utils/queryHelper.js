@@ -17,8 +17,8 @@ export const textSearch = (text, fields) => {
 export const paginate = ({ page = 1, limit = 50 }) => {
   const offset = (Number(page) - 1) * limit;
   return {
-    offset,
-    limit
+    offset: parseInt(offset),
+    limit: parseInt(offset)
   };
 };
 
