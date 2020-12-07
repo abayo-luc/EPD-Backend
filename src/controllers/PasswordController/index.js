@@ -2,7 +2,7 @@ import speakeasy from "speakeasy";
 import { v4 as uuid } from "uuid";
 import main from "../main";
 import db from "../../models";
-import notifier from "../../utils/notifier";
+// import notifier from "../../utils/notifier";
 import { validatePassword, validatePhone } from "../../utils/validator";
 
 export default class PasswordController {
@@ -33,12 +33,12 @@ export default class PasswordController {
        * send code via sms only in production
        */
 
-      if (process.env.NODE_ENV === "production") {
-        await notifier({ message, phoneNumber });
-        return res
-          .status(200)
-          .json({ message: `Password reset PIN sent to ${phoneNumber}` });
-      }
+      // if (process.env.NODE_ENV === "production") {
+      //   await notifier({ message, phoneNumber });
+      //   return res
+      //     .status(200)
+      //     .json({ message: `Password reset PIN sent to ${phoneNumber}` });
+      // }
       return res.status(200).json({ message });
     } catch (error) {
       return main.handleError(res, error);
