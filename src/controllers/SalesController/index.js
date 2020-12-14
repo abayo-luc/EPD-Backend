@@ -1,30 +1,30 @@
-import { Op } from "sequelize";
-import MainController from "../main";
-import db from "../../models";
-import { validateSales, validateSalesUpdate } from "../../utils/validator";
-import { paginate, textSearch } from "../../utils/queryHelper";
+import { Op } from 'sequelize';
+import MainController from '../main';
+import db from '../../models';
+import { validateSales, validateSalesUpdate } from '../../utils/validator';
+import { paginate, textSearch } from '../../utils/queryHelper';
 
 const { Sale } = db;
 const salesOrder = [
-  ["updatedAt", "DESC"],
-  ["clientName", "ASC"]
+  ['updatedAt', 'DESC'],
+  ['clientName', 'ASC'],
 ];
 const salesAssociatedData = [
   {
     model: db.User,
-    as: "user",
+    as: 'user',
     attributes: {
       exclude: [
-        "password",
-        "role",
-        "companyId",
-        "two_factor_secret",
-        "password_reset_token"
-      ]
-    }
+        'password',
+        'role',
+        'companyId',
+        'two_factor_secret',
+        'password_reset_token',
+      ],
+    },
   },
-  { model: db.Company, as: "company" },
-  { model: db.SoldItems, as: "items" }
+  { model: db.Company, as: 'company' },
+  { model: db.SoldItems, as: 'items' },
 ];
 class SalesController {
   static async index(req, res) {
@@ -34,27 +34,27 @@ class SalesController {
       if (companyId) {
         otherFilters = {
           [Op.and]: {
-            companyId
-          }
+            companyId,
+          },
         };
       }
       const data = await Sale.findAndCountAll({
         where: {
           editable: false,
           ...textSearch(search, [
-            "clientName",
-            "province",
-            "district",
-            "sector",
-            "cell",
-            "village"
+            'clientName',
+            'province',
+            'district',
+            'sector',
+            'cell',
+            'village',
           ]),
-          ...otherFilters
+          ...otherFilters,
         },
         include: salesAssociatedData,
         order: salesOrder,
 
-        ...paginate({ page, limit })
+        ...paginate({ page, limit }),
       });
       return res.status(200).json({ data });
     } catch (error) {
@@ -70,8 +70,8 @@ class SalesController {
       if (userId) {
         otherFilters = {
           [Op.and]: {
-            userId
-          }
+            userId,
+          },
         };
       }
       const data = await Sale.findAndCountAll({
@@ -79,19 +79,19 @@ class SalesController {
           companyId,
           editable: false,
           ...textSearch(search, [
-            "clientName",
-            "province",
-            "district",
-            "sector",
-            "cell",
-            "village"
+            'clientName',
+            'province',
+            'district',
+            'sector',
+            'cell',
+            'village',
           ]),
-          ...otherFilters
+          ...otherFilters,
         },
         include: salesAssociatedData,
         order: salesOrder,
 
-        ...paginate({ page, limit })
+        ...paginate({ page, limit }),
       });
       return res.status(200).json({ data });
     } catch (error) {
@@ -101,23 +101,23 @@ class SalesController {
 
   static async agentSales(req, res) {
     try {
-      const { search, page = 1, limit = 15, type = "" } = req.query;
+      const { search, page = 1, limit = 15, type = '' } = req.query;
       const data = await Sale.findAndCountAll({
         where: {
           userId: req.params?.id,
-          editable: type.toLowerCase().trim() === "editable",
+          editable: type.toLowerCase().trim() === 'editable',
           ...textSearch(search, [
-            "clientName",
-            "province",
-            "district",
-            "sector",
-            "cell",
-            "village"
-          ])
+            'clientName',
+            'province',
+            'district',
+            'sector',
+            'cell',
+            'village',
+          ]),
         },
         include: salesAssociatedData,
         order: salesOrder,
-        ...paginate({ page, limit })
+        ...paginate({ page, limit }),
       });
       return res.status(200).json({ data });
     } catch (error) {
@@ -137,13 +137,13 @@ class SalesController {
           ...req.body,
           userId: req.user.id,
           companyId,
-          items: req.body.items.map(item => ({
+          items: req.body.items.map((item) => ({
             ...item,
-            userId: req.user.id
-          }))
+            userId: req.user.id,
+          })),
         },
         {
-          include: [{ model: db.SoldItems, as: "items" }]
+          include: [{ model: db.SoldItems, as: 'items' }],
         }
       );
       return res.status(201).json({ data });
@@ -166,24 +166,24 @@ class SalesController {
     try {
       const { id, salesId } = req.params;
       const attributes = [
-        "clientName",
-        "phoneNumber",
-        "province",
-        "district",
-        "sector",
-        "cell",
-        "village",
-        "age",
-        "clientID",
-        "sex",
-        "editable"
+        'clientName',
+        'phoneNumber',
+        'province',
+        'district',
+        'sector',
+        'cell',
+        'village',
+        'age',
+        'clientID',
+        'sex',
+        'editable',
       ];
 
       await validateSalesUpdate.validateAsync(
         attributes.reduce(
           (prev, current) => ({
             ...prev,
-            [current]: req.body[current]
+            [current]: req.body[current],
           }),
           {}
         ),
@@ -194,7 +194,7 @@ class SalesController {
         return MainController.handleFind(res);
       }
       const fields = [];
-      attributes.forEach(item => {
+      attributes.forEach((item) => {
         if (Object.keys(req.body).includes(item)) {
           record[item] = req.body[item];
           fields.push(item);
@@ -214,14 +214,14 @@ class SalesController {
       const record = await Sale.find({
         where: {
           id: salesId || id,
-          editable: true
-        }
+          editable: true,
+        },
       });
       if (!record) {
         return MainController.handleFind(res);
       }
       await record.destroy();
-      return res.status(204).json({ message: "Success" });
+      return res.status(204).json({ message: 'Success' });
     } catch (error) {
       return MainController.handleError(res, error);
     }
@@ -233,8 +233,7 @@ class SalesController {
       const record = await Sale.findByPk(id);
       if (!record) return MainController.handleFind(res);
       record.editable = true;
-      await record.save({ fields: ["editable"] });
-      console.log(record.editable, ">>>>>>>>>>>>");
+      await record.save({ fields: ['editable'] });
       return res.status(200).json({ data: record });
     } catch (error) {
       return MainController.handleError(res, error);

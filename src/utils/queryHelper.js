@@ -1,15 +1,15 @@
-import { Op } from "sequelize";
-import faker from "faker";
+import { Op } from 'sequelize';
+import faker from 'faker';
 
-export const dataSort = order => [["updatedAt", "ASC"], ...order];
+export const dataSort = (order) => [['updatedAt', 'ASC'], ...order];
 export const textSearch = (text, fields) => {
   if (text) {
     return {
-      [Op.or]: fields.map(item => ({
+      [Op.or]: fields.map((item) => ({
         [item]: {
-          [Op.iLike]: `%${text}%`
-        }
-      }))
+          [Op.iLike]: `%${text}%`,
+        },
+      })),
     };
   }
   return {};
@@ -17,8 +17,8 @@ export const textSearch = (text, fields) => {
 export const paginate = ({ page = 1, limit = 50 }) => {
   const offset = (Number(page) - 1) * limit;
   return {
-    offset: parseInt(offset),
-    limit: parseInt(offset)
+    offset: parseInt(offset, 10),
+    limit: parseInt(offset, 10),
   };
 };
 
@@ -27,7 +27,7 @@ export const generateUser = ({
   username,
   phoneNumber,
   password,
-  role
+  role,
 }) => ({
   username: username || faker.internet.userName(name),
   phoneNumber,
@@ -36,5 +36,5 @@ export const generateUser = ({
     Math.random()
       .toString(36)
       .slice(-8),
-  role: role || "agent"
+  role: role || 'agent',
 });
