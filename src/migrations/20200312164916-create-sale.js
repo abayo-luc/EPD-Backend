@@ -34,6 +34,18 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      sex: {
+        type: Sequelize.ENUM("male", "female"),
+        allowNull: false
+      },
+      age: {
+        type: Sequelize.INTEGER
+      },
+      clientId: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: ""
+      },
       editable: {
         type: Sequelize.BOOLEAN,
         defaultValue: true
